@@ -54,9 +54,11 @@ h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
 
 /* Turunkan logo RS Kariadi saja */
+.logo-rs {
+  margin-top: 60px;   /* atur tinggi turun-naiknya di sini */
+}
 .logo-rs img {
-  margin-top: 80px;   /* atur tinggi di sini */
-
+  max-width: 100%;
 }
 
 /* ====== Deskripsi ISI PERUT ====== */
@@ -107,6 +109,7 @@ h2, h3 { font-weight:700; }
 /* ====== Responsif ====== */
 @media (max-width: 768px){
   .illustrations { flex-direction: column; align-items: center; gap: 30px; }
+  .logo-rs { margin-top: 20px; } /* di HP jangan terlalu turun */
 }
 </style>
 """
@@ -124,7 +127,6 @@ with st.container():
 
     with col_logo2:
         if logo_isi:
-            # atur lebar logo ISI PERUT di sini
             st.image(logo_isi, width=350)
 
     st.markdown(
