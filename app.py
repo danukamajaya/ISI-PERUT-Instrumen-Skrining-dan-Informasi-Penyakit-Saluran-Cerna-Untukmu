@@ -173,10 +173,17 @@ st.markdown(
 )
 
 # ------------------ DATA DASAR ------------------
-("🧑‍⚕️ Data Diri )", 
-    name = st.text_input("Nama")
+st.markdown("### 🧑‍⚕️ Data diri")
+st.caption("Mohon isi data diri sesuai identitas untuk dicantumkan pada hasil skrining.")
+
+col_nama, col_usia, col_jk = st.columns([2, 1, 1])
+with col_nama:
+    name = st.text_input("Nama lengkap")
+with col_usia:
     age  = st.number_input("Usia (tahun)", min_value=0, max_value=120, value=45, step=1)
+with col_jk:
     sex  = st.selectbox("Jenis kelamin", ["Laki-laki", "Perempuan", "Lainnya"], index=0)
+
 today = datetime.today().strftime("%d %b %Y")
 
 # ------------------ PERTANYAAN ------------------
