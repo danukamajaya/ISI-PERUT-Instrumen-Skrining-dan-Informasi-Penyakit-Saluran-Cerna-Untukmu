@@ -38,7 +38,7 @@ egd_img       = pick_first_existing(["ilustrasi_egd.png"])
 colo_img      = pick_first_existing(["ilustrasi_kolonoskopi.png"])
 
 # ------------------ CSS ------------------
-st.markdown("""
+CUSTOM_CSS = """
 <style>
 [data-testid="stSidebar"] { display: none !important; }
 [data-testid="collapsedControl"] { display: none !important; }
@@ -53,17 +53,18 @@ h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
 
-/* ====== Header dua logo (bersebelahan) ====== */
-.brand-row{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:40px;
-  margin:20px 0 10px 0;
+/* ====== Header dua logo ====== */
+.header-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px; /* jarak antar logo */
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
-.brand-row img{
-  height:120px;
-  width:auto;
+.header-logos img {
+  max-height: 100px; /* atur ukuran logo header */
+  height: auto;
 }
 
 /* ====== Deskripsi ISI PERUT ====== */
@@ -72,7 +73,7 @@ h2, h3 { font-weight:700; }
   font-size: 1.05rem;
   color: #333;
   margin: 0 auto 1.2rem auto;
-  max-width: 950px;
+  max-width: 980px;
 }
 
 /* ====== Ilustrasi ====== */
@@ -111,16 +112,18 @@ h2, h3 { font-weight:700; }
   background:#f0fdfa; color:#007C80; font-weight:700; border:1px solid #b2dfdb; border-radius:10px;
 }
 
+/* ====== Responsif ====== */
 @media (max-width: 768px){
-  .brand-row img { height:90px; }
+  .header-logos img { max-height: 90px; }
   .illustrations { flex-direction: column; align-items: center; gap: 30px; }
 }
 </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ------------------ HEADER ------------------
 with st.container():
-    st.markdown("<div class='brand-row'>", unsafe_allow_html=True)
+    st.markdown("<div class='header-logos'>", unsafe_allow_html=True)
     if logo_kariadi: st.image(logo_kariadi)
     if logo_isi:     st.image(logo_isi)
     st.markdown("</div>", unsafe_allow_html=True)
@@ -276,6 +279,124 @@ with colA:
     st.markdown(f'<div class="result-card"><span class="{b_egd}">{v_egd}</span><br/>{a_egd}</div>', unsafe_allow_html=True)
 with colB:
     st.markdown(f'<div class="result-card"><span class="{b_colo}">{v_colo}</span><br/>{a_colo}</div>', unsafe_allow_html=True)
+
+# ------------------ PDF EXPORT (kop surat RS Kariadi) ------------------
+def build_pdf_letterhead(
+    name: str, age: int, sex: str, today: str,
+    v_egd: str, a_egd: str, r_egd: list,
+    v_colo: str, a_colo: str, r_colo: list,
+    logo_rs_path: str | None, logo_isi_path: str | None
+) -> bytes:
+    """Bangun PDF hasil skrining dengan kop RS Kariadi dan dua kesimpulan (EGD & Kolonoskopi)."""
+    buf = BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28)
+
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name="H1C", parent=styles["Title"], alignment=1, leading=22, spaceAfter=12))
+    styles.add(ParagraphStyle(name="SmallGray", parent=styles["Normal"], textColor=colors.HexColor("#444"), fontSize=10))
+    styles.add(ParagraphStyle(name="Label", parent=styles["Normal"], spaceAfter=2))
+    styles.add(ParagraphStyle(name="Bold", parent=styles["Normal"], fontName=styles["Heading4"].fontName, spaceAfter=4))
+
+    elems = []
+
+    # Header: dua logo (RS & ISI PERUT)
+    left_img = Image(logo_rs_path, width=120, height=54) if logo_rs_path and Path(logo_rs_path).exists() else ""
+    right_img = Image(logo_isi_path, width=95, height=95) if logo_isi_path and Path(logo_isi_path).exists() else ""
+    header_tbl = Table(
+        [[left_img, Paragraph(
+            "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
+            "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
+            "Telepon: (024) 8413993, 8413476, 8413764 &nbsp;&nbsp; "
+            "<font color='#2e7d32'><b>Fax:</b> (024) 8318617</font><br/>"
+            "Website: http://www.rskariadi.co.id", styles["Normal"]
+        ), right_img]],
+        colWidths=[130, 330, 95],
+        hAlign="LEFT"
+    )
+    header_tbl.setStyle(TableStyle([
+        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+    ]))
+    elems.append(header_tbl)
+    elems += [Spacer(1,6), Table([[""]], colWidths=[555],
+                                 style=[("LINEBELOW",(0,0),(0,0),1,colors.HexColor("#9dd8d3"))]), Spacer(1,8)]
+
+    # Judul
+    elems.append(Paragraph("HASIL SKRINING ENDOSKOPI SALURAN CERNA", styles["H1C"]))
+    elems.append(Paragraph("(EGD & Kolonoskopi)", styles["SmallGray"]))
+    elems.append(Spacer(1,6))
+
+    # Identitas
+    ident = [
+        Paragraph(f"<b>Tanggal:</b> {today}", styles["Label"]),
+        Paragraph(f"<b>Nama:</b> {name if name else '-'}", styles["Label"]),
+        Paragraph(f"<b>Usia:</b> {age} tahun", styles["Label"]),
+        Paragraph(f"<b>Jenis kelamin:</b> {sex}", styles["Label"]),
+    ]
+    elems.extend(ident)
+    elems.append(Spacer(1,10))
+
+    # Seksi EGD
+    elems.append(Paragraph("<b>1) Saluran Cerna Atas (EGD)</b>", styles["Bold"]))
+    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
+    elems.append(Paragraph(a_egd, styles["Label"]))
+    if r_egd:
+        elems.append(Spacer(1,2))
+        elems.append(Paragraph("<b>Faktor yang terdeteksi:</b>", styles["Label"]))
+        for r in r_egd:
+            elems.append(Paragraph(f"• {r}", styles["Label"]))
+    elems.append(Spacer(1,8))
+
+    # Seksi Kolonoskopi
+    elems.append(Paragraph("<b>2) Saluran Cerna Bawah (Kolonoskopi)</b>", styles["Bold"]))
+    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_colo}", styles["Label"]))
+    elems.append(Paragraph(a_colo, styles["Label"]))
+    if r_colo:
+        elems.append(Spacer(1,2))
+        elems.append(Paragraph("<b>Faktor yang terdeteksi:</b>", styles["Label"]))
+        for r in r_colo:
+            elems.append(Paragraph(f"• {r}", styles["Label"]))
+    elems.append(Spacer(1,12))
+
+    # Catatan
+    elems.append(Paragraph(
+        "Hasil ini bersifat edukatif dan tidak menggantikan penilaian dokter. "
+        "Jika keluhan berat, mendadak, atau menetap, segera konsultasikan ke dokter penyakit dalam.",
+        styles["SmallGray"]
+    ))
+
+    doc.build(elems)
+    return buf.getvalue()
+
+# Kumpulkan alasan yang dipilih untuk dicetak di PDF
+r_egd_all  = (egd_alarm_sel if 'egd_alarm_sel' in locals() else []) + \
+             (egd_risk_sel  if 'egd_risk_sel'  in locals() else []) + \
+             (egd_other_sel if 'egd_other_sel' in locals() else [])
+r_colo_all = (colo_alarm_sel if 'colo_alarm_sel' in locals() else []) + \
+             (colo_risk_sel  if 'colo_risk_sel'  in locals() else []) + \
+             (colo_other_sel if 'colo_other_sel' in locals() else [])
+
+st.markdown("")
+
+if HAS_RL:
+    pdf_bytes = build_pdf_letterhead(
+        name or "", int(age), sex, today,
+        v_egd, a_egd, r_egd_all,
+        v_colo, a_colo, r_colo_all,
+        logo_kariadi, logo_isi
+    )
+    st.download_button(
+        "⬇️ Unduh Surat Hasil (PDF)",
+        data=pdf_bytes,
+        file_name=f"Hasil_Skrining_ISI_PERUT_{today.replace(' ','_')}.pdf",
+        mime="application/pdf"
+    )
+else:
+    st.info(
+        "Fitur unduh PDF membutuhkan paket **reportlab**.\n\n"
+        "Tambahkan file `requirements.txt` dengan isi:\n"
+        "`streamlit>=1.37` dan `reportlab>=3.6.12`, lalu deploy ulang.",
+        icon="ℹ️"
+    )
 
 # ------------------ FOOTER ------------------
 st.markdown("---")
