@@ -63,7 +63,7 @@ h2, h3 { font-weight:700; }
   margin-bottom: 10px;
 }
 .header-logos img {
-  max-height: 120px; /* atur ukuran logo header */
+  max-height: 100px; /* atur ukuran logo header */
   height: auto;
 }
 
