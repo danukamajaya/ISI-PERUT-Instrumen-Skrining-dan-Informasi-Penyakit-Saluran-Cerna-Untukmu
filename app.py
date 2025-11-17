@@ -78,6 +78,8 @@ h2, h3 { font-weight:700; }
 }
 .illustration { text-align: center; }
 .illustration img {
+  text-align: center;
+  margin-left: 40px; 
   max-width: 400px;   /* supaya gambar gabungan bisa lebar */
   width: 80%;
   height: auto;
