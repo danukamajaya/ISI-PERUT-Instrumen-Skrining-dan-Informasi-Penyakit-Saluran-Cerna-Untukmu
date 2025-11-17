@@ -144,6 +144,7 @@ with st.container():
 st.markdown("<div class='illustrations'>", unsafe_allow_html=True)
 
 if ilustrasi_all:
+    st.image(ilustrasi_all, width=500)
     st.markdown("<div class='illustration'>", unsafe_allow_html=True)
     st.image(ilustrasi_all, use_column_width=True)
     st.markdown(
