@@ -47,7 +47,7 @@ CUSTOM_CSS = """
   background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 55%, #e6fffb 100%);
   color: #1c1c1c;
 }
-.block-container { padding-top: 20px; padding-bottom: 2rem; }
+.block-container { padding-top: 60px; padding-bottom: 2rem; }
 
 h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
@@ -59,11 +59,10 @@ h2, h3 { font-weight:700; }
   justify-content: center;
   align-items: center;
   gap: 40px;
-  margin-top: 100px;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 .header-logos img {
-  margin-top: 100px;
   max-height: 100px;
   height: auto;
 }
