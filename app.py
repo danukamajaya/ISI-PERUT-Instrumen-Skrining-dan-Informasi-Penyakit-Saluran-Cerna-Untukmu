@@ -173,7 +173,7 @@ st.markdown(
 )
 
 # ------------------ DATA DASAR ------------------
-with st.expander("🧑‍⚕️ Data dasar (opsional)", expanded=False):
+("🧑‍⚕️ Data Diri )", 
     name = st.text_input("Nama")
     age  = st.number_input("Usia (tahun)", min_value=0, max_value=120, value=45, step=1)
     sex  = st.selectbox("Jenis kelamin", ["Laki-laki", "Perempuan", "Lainnya"], index=0)
