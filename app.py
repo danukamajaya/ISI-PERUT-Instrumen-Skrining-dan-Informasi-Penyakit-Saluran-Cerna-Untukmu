@@ -33,9 +33,12 @@ def pick_first_existing(paths):
 
 # ------------------ ASSET PATHS ------------------
 logo_kariadi = pick_first_existing(["logo_kariadi.png"])
-logo_isi      = pick_first_existing(["logo_isi_perut.png"])
+logo_isi     = pick_first_existing(["logo_isi_perut.png"])
 # ilustrasi gabungan EGD + kolonoskopi
-ilustrasi_all = pick_first_existing(["ilustrasi_endoskopi.png"])
+ilustrasi_endoskopi = pick_first_existing([
+    "ilustrasi_endoskopi.png",
+    "ilustrasi_endoscopy.png",
+])
 
 # ------------------ CSS ------------------
 CUSTOM_CSS = """
@@ -53,17 +56,17 @@ h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
 
-/* Turunkan logo RS Kariadi saja */
-.logo-rs img {
-  margin-top: 200px;   /* atur tinggi di sini */
+/* Turunkan logo RS Kariadi sedikit di tampilan web */
+.logo-rs-offset {
+  height: 80px;
 }
 
 /* ====== Deskripsi ISI PERUT ====== */
 .desc {
   text-align: center;
-  font-size: 1.20rem;
+  font-size: 1.15rem;
   color: #333;
-  margin: 0 auto 1.2rem auto;
+  margin: 0 auto 1.4rem auto;
   max-width: 980px;
 }
 
@@ -71,22 +74,23 @@ h2, h3 { font-weight:700; }
 .illustrations {
   display: flex;
   justify-content: center;
-  align-items: start;
-  gap: 60px;
-  margin-top: 20px;
-  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10px;
 }
-.illustration { text-align: center; }
-.illustration img {
+.illustration {
   text-align: center;
-  margin-left: 40px; 
-  max-width: 400px;   /* supaya gambar gabungan bisa lebar */
-  width: 80%;
+}
+.illustration img {
+  max-width: 420px;
   height: auto;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,.08);
 }
-.illustration-cap { color: #5b7580; font-size: .9rem; margin-top: .5rem; }
+.illustration-cap {
+  color: #5b7580;
+  font-size: .9rem;
+  margin-top: .5rem;
+}
 
 /* ====== Kartu hasil ====== */
 .result-card {
@@ -108,7 +112,8 @@ h2, h3 { font-weight:700; }
 
 /* ====== Responsif ====== */
 @media (max-width: 768px){
-  .illustrations { flex-direction: column; align-items: center; gap: 30px; }
+  .illustrations { flex-direction: column; align-items: center; }
+  .illustration img { max-width: 100%; }
 }
 </style>
 """
@@ -116,17 +121,15 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ------------------ HEADER (2 logo sejajar) ------------------
 with st.container():
-    pad_left, col_logo1, col_logo2, pad_right = st.columns([0.3, 1, 1.2, 0.2])
+    pad_left, col_logo1, col_logo2, pad_right = st.columns([0.3, 1, 1, 0.3])
 
     with col_logo1:
         if logo_kariadi:
-            # spacer vertikal untuk menurunkan logo RS Kariadi
-            st.markdown("<div style='height:80px'></div>", unsafe_allow_html=True)
+            st.markdown("<div class='logo-rs-offset'></div>", unsafe_allow_html=True)
             st.image(logo_kariadi, width=500)
 
     with col_logo2:
         if logo_isi:
-            # atur lebar logo ISI PERUT di sini
             st.image(logo_isi, width=350)
 
     st.markdown(
@@ -142,51 +145,35 @@ with st.container():
         unsafe_allow_html=True,
     )
 
-# ------------------ ILUSTRASI (gabungan EGD + kolonoskopi) ------------------
+# ------------------ ILUSTRASI (gambar gabungan) ------------------
 st.markdown("<div class='illustrations'>", unsafe_allow_html=True)
-
-if ilustrasi_all:
+if ilustrasi_endoskopi:
     st.markdown("<div class='illustration'>", unsafe_allow_html=True)
-    st.image(ilustrasi_all, use_column_width=True)
+    st.image(ilustrasi_endoskopi)
     st.markdown(
-        "<div class='illustration-cap'>Skema endoskopi saluran cerna atas & bawah</div>",
-        unsafe_allow_html=True
+        "<div class='illustration-cap'>Ilustrasi endoskopi saluran cerna atas dan kolonoskopi</div>",
+        unsafe_allow_html=True,
     )
     st.markdown("</div>", unsafe_allow_html=True)
-
 st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("---")
 
-# ------------------ DESKRIPSI SKRINING ------------------
-st.markdown(
-    """
-    <h1 style='text-align:center;'>Apakah Saya Perlu Teropong Saluran Cerna?</h1>
-    <p style='text-align:center; font-size:1.05rem; color:#333;'>
-      Alat bantu sederhana untuk menilai apakah Anda mungkin memerlukan pemeriksaan teropong
-      saluran cerna atas (<i>esophagogastroduodenoscopy</i>/EGD) maupun saluran cerna bawah
-      (<i>kolonoskopi</i>). Berdasarkan panduan klinis; hasil bersifat edukasi dan tidak
-      menggantikan diagnosis medis.
-    </p>
-    """,
-    unsafe_allow_html=True
-)
-
-# ------------------ DATA DASAR ------------------
+# ------------------ DATA DIRI (WAJIB DIISI) ------------------
 st.markdown("### 🧑‍⚕️ Data diri")
-st.caption("Mohon isi data diri sesuai identitas untuk dicantumkan pada hasil skrining.")
+st.caption("Mohon isi data diri untuk dicantumkan pada hasil skrining.")
 
 col_nama, col_usia, col_jk = st.columns([2, 1, 1])
 with col_nama:
     name = st.text_input("Nama lengkap")
 with col_usia:
-    age  = st.number_input("Usia (tahun)", min_value=0, max_value=120, value=45, step=1)
+    age = st.number_input("Usia (tahun)", min_value=0, max_value=120, value=45, step=1)
 with col_jk:
-    sex  = st.selectbox("Jenis kelamin", ["Laki-laki", "Perempuan", "Lainnya"], index=0)
+    sex = st.selectbox("Jenis kelamin", ["Laki-laki", "Perempuan", "Lainnya"], index=0)
 
 today = datetime.today().strftime("%d %b %Y")
 
-# ------------------ PERTANYAAN ------------------
+# ------------------ PERTANYAAN: EGD (FOCUS ALARM FEATURES DISPEPSIA) ------------------
 ALARM_EGD_DYSPEPSIA = [
     "Usia saya **50 tahun atau lebih**",
     "Ada **riwayat kanker saluran cerna atas** (lambung/kerongkongan) pada "
@@ -243,15 +230,18 @@ with st.expander("Apakah Saya perlu teropong saluran cerna **bawah (Kolonoskopi)
     with c1:
         st.subheader("🚨 Tanda Bahaya")
         for i, q in enumerate(ALARM_COLO):
-            if st.checkbox(q, key=f"colo_alarm_{i}"): colo_alarm_sel.append(q)
+            if st.checkbox(q, key=f"colo_alarm_{i}"):
+                colo_alarm_sel.append(q)
     with c2:
         st.subheader("⚠️ Faktor Risiko")
         for i, q in enumerate(RISK_COLO):
-            if st.checkbox(q, key=f"colo_risk_{i}"): colo_risk_sel.append(q)
+            if st.checkbox(q, key=f"colo_risk_{i}"):
+                colo_risk_sel.append(q)
     with c3:
         st.subheader("🩹 Indikasi Elektif")
         for i, q in enumerate(OTHER_COLO):
-            if st.checkbox(q, key=f"colo_other_{i}"): colo_other_sel.append(q)
+            if st.checkbox(q, key=f"colo_other_{i}"):
+                colo_other_sel.append(q)
 
 # ------------------ HASIL SKRINING ------------------
 def verdict(alarm, risk, other, organ):
@@ -264,22 +254,29 @@ def verdict(alarm, risk, other, organ):
             "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul tanda bahaya, segera konsultasi ke dokter."
         )
 
-v_egd,  b_egd,  a_egd  = verdict(egd_alarm_sel,  egd_risk_sel,  egd_other_sel,  "endoskopi saluran cerna atas (EGD)")
+# EGD: sekarang hanya memakai daftar tanda bahaya dispepsia
+v_egd,  b_egd,  a_egd  = verdict(egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)")
 v_colo, b_colo, a_colo = verdict(colo_alarm_sel, colo_risk_sel, colo_other_sel, "kolonoskopi (saluran cerna bawah)")
 
 st.subheader("📋 Hasil Skrining")
 colA, colB = st.columns(2)
 with colA:
-    st.markdown(f'<div class="result-card"><span class="{b_egd}">{v_egd}</span><br/>{a_egd}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="result-card"><span class="{b_egd}">{v_egd}</span><br/>{a_egd}</div>',
+        unsafe_allow_html=True,
+    )
 with colB:
-    st.markdown(f'<div class="result-card"><span class="{b_colo}">{v_colo}</span><br/>{a_colo}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="result-card"><span class="{b_colo}">{v_colo}</span><br/>{a_colo}</div>',
+        unsafe_allow_html=True,
+    )
 
 # ------------------ PDF EXPORT (kop surat RS Kariadi) ------------------
 def build_pdf_letterhead(
     name: str, age: int, sex: str, today: str,
     v_egd: str, a_egd: str, r_egd: list,
     v_colo: str, a_colo: str, r_colo: list,
-    logo_rs_path: str | None, logo_isi_path: str | None
+    logo_rs_path: str | None, logo_isi_path: str | None,
 ) -> bytes:
     """Bangun PDF hasil skrining dengan kop RS Kariadi dan dua kesimpulan (EGD & Kolonoskopi)."""
     buf = BytesIO()
@@ -305,19 +302,22 @@ def build_pdf_letterhead(
             "Website: http://www.rskariadi.co.id", styles["Normal"]
         ), right_img]],
         colWidths=[130, 330, 95],
-        hAlign="LEFT"
+        hAlign="LEFT",
     )
     header_tbl.setStyle(TableStyle([
         ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
     ]))
     elems.append(header_tbl)
-    elems += [Spacer(1,6), Table([[""]], colWidths=[555],
-                                 style=[("LINEBELOW",(0,0),(0,0),1,colors.HexColor("#9dd8d3"))]), Spacer(1,8)]
+    elems += [
+        Spacer(1, 6),
+        Table([[""]], colWidths=[555], style=[("LINEBELOW", (0,0), (0,0), 1, colors.HexColor("#9dd8d3"))]),
+        Spacer(1, 8),
+    ]
 
     # Judul
     elems.append(Paragraph("HASIL SKRINING ENDOSKOPI SALURAN CERNA", styles["H1C"]))
     elems.append(Paragraph("(EGD & Kolonoskopi)", styles["SmallGray"]))
-    elems.append(Spacer(1,6))
+    elems.append(Spacer(1, 6))
 
     # Identitas
     ident = [
@@ -327,46 +327,44 @@ def build_pdf_letterhead(
         Paragraph(f"<b>Jenis kelamin:</b> {sex}", styles["Label"]),
     ]
     elems.extend(ident)
-    elems.append(Spacer(1,10))
+    elems.append(Spacer(1, 10))
 
     # Seksi EGD
     elems.append(Paragraph("<b>1) Saluran Cerna Atas (EGD)</b>", styles["Bold"]))
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
     elems.append(Paragraph(a_egd, styles["Label"]))
     if r_egd:
-        elems.append(Spacer(1,2))
+        elems.append(Spacer(1, 2))
         elems.append(Paragraph("<b>Faktor yang terdeteksi:</b>", styles["Label"]))
         for r in r_egd:
             elems.append(Paragraph(f"• {r}", styles["Label"]))
-    elems.append(Spacer(1,8))
+    elems.append(Spacer(1, 8))
 
     # Seksi Kolonoskopi
     elems.append(Paragraph("<b>2) Saluran Cerna Bawah (Kolonoskopi)</b>", styles["Bold"]))
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_colo}", styles["Label"]))
     elems.append(Paragraph(a_colo, styles["Label"]))
     if r_colo:
-        elems.append(Spacer(1,2))
+        elems.append(Spacer(1, 2))
         elems.append(Paragraph("<b>Faktor yang terdeteksi:</b>", styles["Label"]))
         for r in r_colo:
             elems.append(Paragraph(f"• {r}", styles["Label"]))
-    elems.append(Spacer(1,12))
+    elems.append(Spacer(1, 12))
 
     # Catatan
     elems.append(Paragraph(
         "Hasil ini bersifat edukatif dan tidak menggantikan penilaian dokter. "
         "Jika keluhan berat, mendadak, atau menetap, segera konsultasikan ke dokter penyakit dalam.",
-        styles["SmallGray"]
+        styles["SmallGray"],
     ))
 
     doc.build(elems)
     return buf.getvalue()
 
 # Kumpulkan alasan yang dipilih untuk dicetak di PDF
-r_egd_all  = (egd_alarm_sel if 'egd_alarm_sel' in locals() else []) + \
-             (egd_risk_sel  if 'egd_risk_sel'  in locals() else []) + \
-             (egd_other_sel if 'egd_other_sel' in locals() else [])
+r_egd_all = (egd_alarm_sel if 'egd_alarm_sel' in locals() else [])
 r_colo_all = (colo_alarm_sel if 'colo_alarm_sel' in locals() else []) + \
-             (colo_risk_sel  if 'colo_risk_sel'  in locals() else []) + \
+             (colo_risk_sel if 'colo_risk_sel' in locals() else []) + \
              (colo_other_sel if 'colo_other_sel' in locals() else [])
 
 st.markdown("")
@@ -376,20 +374,20 @@ if HAS_RL:
         name or "", int(age), sex, today,
         v_egd, a_egd, r_egd_all,
         v_colo, a_colo, r_colo_all,
-        logo_kariadi, logo_isi
+        logo_kariadi, logo_isi,
     )
     st.download_button(
         "⬇️ Unduh Surat Hasil (PDF)",
         data=pdf_bytes,
         file_name=f"Hasil_Skrining_ISI_PERUT_{today.replace(' ','_')}.pdf",
-        mime="application/pdf"
+        mime="application/pdf",
     )
 else:
     st.info(
         "Fitur unduh PDF membutuhkan paket **reportlab**.\n\n"
         "Tambahkan file `requirements.txt` dengan isi:\n"
         "`streamlit>=1.37` dan `reportlab>=3.6.12`, lalu deploy ulang.",
-        icon="ℹ️"
+        icon="ℹ️",
     )
 
 # ------------------ FOOTER ------------------
