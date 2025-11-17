@@ -56,13 +56,8 @@ h2, h3 { font-weight:700; }
 /* Turunkan logo RS Kariadi saja */
 .logo-rs img {
   margin-top: 1000px;   /* atur tinggi di sini */
-  
+
 }
-.header-logos img {
-  max-height: 100px;
-  height: auto;
-}
-*/
 
 /* ====== Deskripsi ISI PERUT ====== */
 .desc {
