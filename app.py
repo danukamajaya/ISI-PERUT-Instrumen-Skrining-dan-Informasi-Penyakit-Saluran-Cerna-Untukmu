@@ -213,6 +213,7 @@ with st.expander("Apakah Saya perlu teropong saluran cerna **atas (EGD)** ?", ex
         if st.checkbox(q, key=f"egd_alarm_{i}"):
             egd_alarm_sel.append(q)
 
+# ------------------ PERTANYAAN: KOLO ------------------
 ALARM_COLO = [
     "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**",
     "Saya **anemia defisiensi besi** atau tampak pucat/lemas",
