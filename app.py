@@ -57,14 +57,6 @@ h2, h3 { font-weight:700; }
 .logo-rs img {
   margin-top: 1000px;   /* atur tinggi di sini */
   
-/* (header-logos lama, sekarang tidak dipakai langsung)
-.header-logos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  margin-top: 20px;
-  margin-bottom: 10px;
 }
 .header-logos img {
   max-height: 100px;
