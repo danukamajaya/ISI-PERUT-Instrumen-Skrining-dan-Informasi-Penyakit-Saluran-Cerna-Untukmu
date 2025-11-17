@@ -55,7 +55,7 @@ h2, h3 { font-weight:700; }
 
 /* Turunkan logo RS Kariadi saja */
 .logo-rs img {
-  margin-top: 40px;   /* atur tinggi di sini */
+  margin-top: 600px;   /* atur tinggi di sini */
   
 /* (header-logos lama, sekarang tidak dipakai langsung)
 .header-logos {
