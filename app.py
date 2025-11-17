@@ -187,46 +187,31 @@ with col_jk:
 today = datetime.today().strftime("%d %b %Y")
 
 # ------------------ PERTANYAAN ------------------
-ALARM_EGD = [
-    "Saya **muntah darah** (hematemesis)",
-    "BAB saya **hitam pekat seperti aspal** (melena)",
-    "Saya makin **sulit menelan** (disfagia progresif)",
+ALARM_EGD_DYSPEPSIA = [
+    "Usia saya **50 tahun atau lebih**",
+    "Ada **riwayat kanker saluran cerna atas** (lambung/kerongkongan) pada "
+    "**keluarga tingkat pertama** (orang tua, saudara kandung, atau anak)",
+    "Saya mengalami **penurunan berat badan yang tidak direncanakan**",
+    "Dokter mengatakan saya mengalami **perdarahan saluran cerna** "
+    "atau **anemia defisiensi besi**",
+    "Saya **sulit menelan** (disfagia)",
     "Saya **nyeri saat menelan** (odynofagia)",
-    "Berat badan saya **turun banyak tanpa sebab jelas**",
-    "Saya diberi tahu darah saya **kurang (anemia)** atau tampak pucat/lemas",
-    "Saya **sering muntah berulang atau tidak bisa makan/minum**",
-    "Perut bagian atas terasa **penuh / cepat kenyang / tersumbat** (curiga sumbatan lambung)",
-]
-RISK_EGD = [
-    "Saya **baru mengalami keluhan lambung** setelah **usia ≥50 tahun**",
-    "Ada **keluarga dekat** pernah terkena **kanker lambung**",
-]
-OTHER_EGD = [
-    "Keluhan perut atas/nyeri ulu hati/panas di dada **>4–6 minggu** dan belum membaik",
-    "**Nyeri ulu hati** tetap ada meski sudah minum PPI **4–8 minggu**",
-    "Sering **asam/panas naik ke tenggorokan (refluks/GERD)** dan **tidak membaik** dengan obat",
-    "Riwayat **tukak/ulkus** lambung atau duodenum dan keluhan berlanjut",
-    "Riwayat **infeksi H. pylori** dan masih ada keluhan setelah pengobatan",
-    "Sering memakai **NSAID/pengencer darah** disertai keluhan perut",
-    "Dugaan **perdarahan samar** (tes darah feses positif) tanpa penyebab jelas",
-    "Kontrol endoskopi pasca terapi (ulkus/varises/polipektomi) sesuai anjuran dokter",
+    "Saya mengalami **muntah menetap atau berulang**",
+    "Pemeriksaan seperti **USG, rontgen, atau CT-scan** menunjukkan "
+    "**kelainan organik pada saluran cerna atas**",
 ]
 
 with st.expander("Apakah Saya perlu teropong saluran cerna **atas (EGD)** ?", expanded=False):
-    e1, e2, e3 = st.columns(3)
-    egd_alarm_sel, egd_risk_sel, egd_other_sel = [], [], []
-    with e1:
-        st.subheader("🚨 Tanda Bahaya")
-        for i, q in enumerate(ALARM_EGD):
-            if st.checkbox(q, key=f"egd_alarm_{i}"): egd_alarm_sel.append(q)
-    with e2:
-        st.subheader("⚠️ Faktor Risiko")
-        for i, q in enumerate(RISK_EGD):
-            if st.checkbox(q, key=f"egd_risk_{i}"): egd_risk_sel.append(q)
-    with e3:
-        st.subheader("🩹 Indikasi Elektif")
-        for i, q in enumerate(OTHER_EGD):
-            if st.checkbox(q, key=f"egd_other_{i}"): egd_other_sel.append(q)
+    st.subheader("🚨 Tanda bahaya pada keluhan dispepsia")
+    st.caption(
+        "Checklist berikut diadaptasi dari kriteria tanda bahaya (alarm features) "
+        "pada pasien dengan keluhan dispepsia. Jika salah satu tercentang, "
+        "Anda sebaiknya segera berkonsultasi ke dokter."
+    )
+    egd_alarm_sel = []
+    for i, q in enumerate(ALARM_EGD_DYSPEPSIA):
+        if st.checkbox(q, key=f"egd_alarm_{i}"):
+            egd_alarm_sel.append(q)
 
 ALARM_COLO = [
     "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**",
