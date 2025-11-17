@@ -78,7 +78,7 @@ h2, h3 { font-weight:700; }
 }
 .illustration { text-align: center; }
 .illustration img {
-  max-width: 520px;   /* supaya gambar gabungan bisa lebar */
+  max-width: 400px;   /* supaya gambar gabungan bisa lebar */
   width: 100%;
   height: auto;
   border-radius: 10px;
@@ -144,7 +144,6 @@ with st.container():
 st.markdown("<div class='illustrations'>", unsafe_allow_html=True)
 
 if ilustrasi_all:
-    st.image(ilustrasi_all, width=500)
     st.markdown("<div class='illustration'>", unsafe_allow_html=True)
     st.image(ilustrasi_all, use_column_width=True)
     st.markdown(
