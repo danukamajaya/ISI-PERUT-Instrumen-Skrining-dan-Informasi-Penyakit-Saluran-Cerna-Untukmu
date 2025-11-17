@@ -34,8 +34,8 @@ def pick_first_existing(paths):
 # ------------------ ASSET PATHS ------------------
 logo_kariadi = pick_first_existing(["logo_kariadi.png"])
 logo_isi      = pick_first_existing(["logo_isi_perut.png"])
-egd_img       = pick_first_existing(["ilustrasi_egd.png"])
-colo_img      = pick_first_existing(["ilustrasi_kolonoskopi.png"])
+# ilustrasi gabungan EGD + kolonoskopi
+ilustrasi_all = pick_first_existing(["ilustrasi_endoskopi.png"])
 
 # ------------------ CSS ------------------
 CUSTOM_CSS = """
@@ -56,7 +56,6 @@ h2, h3 { font-weight:700; }
 /* Turunkan logo RS Kariadi saja */
 .logo-rs img {
   margin-top: 200px;   /* atur tinggi di sini */
-
 }
 
 /* ====== Deskripsi ISI PERUT ====== */
@@ -79,7 +78,8 @@ h2, h3 { font-weight:700; }
 }
 .illustration { text-align: center; }
 .illustration img {
-  max-width: 340px;
+  max-width: 900px;   /* supaya gambar gabungan bisa lebar */
+  width: 100%;
   height: auto;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,.08);
@@ -118,6 +118,7 @@ with st.container():
 
     with col_logo1:
         if logo_kariadi:
+            # spacer vertikal untuk menurunkan logo RS Kariadi
             st.markdown("<div style='height:80px'></div>", unsafe_allow_html=True)
             st.image(logo_kariadi, width=500)
 
@@ -139,18 +140,18 @@ with st.container():
         unsafe_allow_html=True,
     )
 
-# ------------------ ILUSTRASI ------------------
+# ------------------ ILUSTRASI (gabungan EGD + kolonoskopi) ------------------
 st.markdown("<div class='illustrations'>", unsafe_allow_html=True)
-if egd_img:
+
+if ilustrasi_all:
     st.markdown("<div class='illustration'>", unsafe_allow_html=True)
-    st.image(egd_img)
-    st.markdown("<div class='illustration-cap'>Skema endoskopi saluran cerna atas (EGD)</div>", unsafe_allow_html=True)
+    st.image(ilustrasi_all, use_column_width=True)
+    st.markdown(
+        "<div class='illustration-cap'>Skema endoskopi saluran cerna atas & bawah</div>",
+        unsafe_allow_html=True
+    )
     st.markdown("</div>", unsafe_allow_html=True)
-if colo_img:
-    st.markdown("<div class='illustration'>", unsafe_allow_html=True)
-    st.image(colo_img)
-    st.markdown("<div class='illustration-cap'>Skema endoskopi saluran cerna bawah (Kolonoskopi)</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("---")
