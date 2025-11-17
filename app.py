@@ -59,10 +59,11 @@ h2, h3 { font-weight:700; }
   justify-content: center;
   align-items: center;
   gap: 40px;
-  margin-top: 20px;
+  margin-top: 100px;
   margin-bottom: 10px;
 }
 .header-logos img {
+  margin-top: 100px;
   max-height: 100px;
   height: auto;
 }
