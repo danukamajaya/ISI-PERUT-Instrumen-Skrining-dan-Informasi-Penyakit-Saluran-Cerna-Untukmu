@@ -61,7 +61,7 @@ h2, h3 { font-weight:700; }
 /* ====== Deskripsi ISI PERUT ====== */
 .desc {
   text-align: center;
-  font-size: 1.05rem;
+  font-size: 1.20rem;
   color: #333;
   margin: 0 auto 1.2rem auto;
   max-width: 980px;
@@ -78,7 +78,7 @@ h2, h3 { font-weight:700; }
 }
 .illustration { text-align: center; }
 .illustration img {
-  max-width: 900px;   /* supaya gambar gabungan bisa lebar */
+  max-width: 520px;   /* supaya gambar gabungan bisa lebar */
   width: 100%;
   height: auto;
   border-radius: 10px;
