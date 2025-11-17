@@ -133,7 +133,7 @@ with st.container():
     with col_logo2:
         if logo_isi:
             # atur lebar logo ISI PERUT di sini
-            st.image(logo_isi, width=220)
+            st.image(logo_isi, width=300)
 
     st.markdown(
         """
