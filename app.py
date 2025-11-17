@@ -128,7 +128,7 @@ with st.container():
     with col_logo1:
         if logo_kariadi:
             # atur lebar logo RS di sini
-            st.image(logo_kariadi, width=300)
+            st.image(logo_kariadi, width=500)
 
     with col_logo2:
         if logo_isi:
