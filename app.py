@@ -53,19 +53,20 @@ h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
 
-/* ====== Header dua logo ====== */
+/* (header-logos lama, sekarang tidak dipakai langsung)
 .header-logos {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 40px; /* jarak antar logo */
+  gap: 40px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
 .header-logos img {
-  max-height: 100px; /* atur ukuran logo header */
+  max-height: 100px;
   height: auto;
 }
+*/
 
 /* ====== Deskripsi ISI PERUT ====== */
 .desc {
@@ -114,19 +115,25 @@ h2, h3 { font-weight:700; }
 
 /* ====== Responsif ====== */
 @media (max-width: 768px){
-  .header-logos img { max-height: 90px; }
   .illustrations { flex-direction: column; align-items: center; gap: 30px; }
 }
 </style>
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-# ------------------ HEADER ------------------
+# ------------------ HEADER (2 logo sejajar) ------------------
 with st.container():
-    st.markdown("<div class='header-logos'>", unsafe_allow_html=True)
-    if logo_kariadi: st.image(logo_kariadi)
-    if logo_isi:     st.image(logo_isi)
-    st.markdown("</div>", unsafe_allow_html=True)
+    col_logo1, col_logo2 = st.columns([1, 1])
+
+    with col_logo1:
+        if logo_kariadi:
+            # atur lebar logo RS di sini
+            st.image(logo_kariadi, width=220)
+
+    with col_logo2:
+        if logo_isi:
+            # atur lebar logo ISI PERUT di sini
+            st.image(logo_isi, width=220)
 
     st.markdown(
         """
