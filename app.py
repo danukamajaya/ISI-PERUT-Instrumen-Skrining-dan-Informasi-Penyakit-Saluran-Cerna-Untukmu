@@ -47,7 +47,7 @@ CUSTOM_CSS = """
   background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 55%, #e6fffb 100%);
   color: #1c1c1c;
 }
-.block-container { padding-top: 45px; padding-bottom: 2rem; }
+.block-container { padding-top: 40px; padding-bottom: 2rem; }
 
 h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
@@ -118,7 +118,7 @@ with st.container():
 
     with col_logo1:
         if logo_kariadi:
-            st.markdown("<div style='height:60px'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:80px'></div>", unsafe_allow_html=True)
             st.image(logo_kariadi, width=500)
 
     with col_logo2:
