@@ -114,7 +114,7 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ------------------ HEADER (2 logo sejajar) ------------------
 with st.container():
-    pad_left, col_logo1, col_logo2, pad_right = st.columns([0.3, 1, 1, 0.2])
+    pad_left, col_logo1, col_logo2, pad_right = st.columns([0.3, 1, 1.2, 0.2])
 
     with col_logo1:
         if logo_kariadi:
