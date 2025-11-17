@@ -118,7 +118,7 @@ with st.container():
 
     with col_logo1:
         if logo_kariadi:
-            st.markdown("<div style='height:600px'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:60px'></div>", unsafe_allow_html=True)
             st.image(logo_kariadi, width=500)
 
     with col_logo2:
