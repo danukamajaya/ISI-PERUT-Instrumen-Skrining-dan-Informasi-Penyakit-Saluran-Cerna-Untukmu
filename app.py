@@ -53,6 +53,10 @@ h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
 
+/* Turunkan logo RS Kariadi saja */
+.logo-rs img {
+  margin-top: 40px;   /* atur tinggi di sini */
+  
 /* (header-logos lama, sekarang tidak dipakai langsung)
 .header-logos {
   display: flex;
@@ -127,8 +131,9 @@ with st.container():
 
     with col_logo1:
         if logo_kariadi:
-            # atur lebar logo RS di sini
+            st.markdown("<div class='logo-rs'>", unsafe_allow_html=True)
             st.image(logo_kariadi, width=500)
+            st.markdown("</div>", unsafe_allow_html=True)
 
     with col_logo2:
         if logo_isi:
