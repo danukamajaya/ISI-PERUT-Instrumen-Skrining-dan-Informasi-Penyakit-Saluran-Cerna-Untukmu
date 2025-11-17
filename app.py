@@ -79,7 +79,7 @@ h2, h3 { font-weight:700; }
 .illustration { text-align: center; }
 .illustration img {
   max-width: 400px;   /* supaya gambar gabungan bisa lebar */
-  width: 100%;
+  width: 80%;
   height: auto;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,.08);
