@@ -224,7 +224,7 @@ ALARM_COLO = [
 RISK_COLO = [
     "Usia **≥50 tahun** dengan keluhan saluran cerna bawah",
     "Ada **keluarga dekat** dengan **kanker kolorektal/polip adenoma**",
-    "**FIT/FOBT positif**",
+    "**Pemeriksaan tinja darah samar positif**",
     "Riwayat **IBD** (kolitis ulseratif/Crohn) — evaluasi/monitoring",
     "Riwayat **polip/operasi CRC** — perlu **surveilans** berkala",
 ]
