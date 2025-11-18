@@ -39,16 +39,8 @@ def pick_first_existing(paths):
     return None
 
 # ------------------ ASSET PATHS ------------------
-# logo header gabungan (Kemenkes RS Kariadi + ISI PERUT)
-logo_header = pick_first_existing(
-    ["logo_header.png", "Logo_Header.png", "logo_header_full.png"]
-)
-
-# logo terpisah tetap dipakai untuk KOP PDF
 logo_kariadi = pick_first_existing(["logo_kariadi.png"])
 logo_isi = pick_first_existing(["logo_isi_perut.png"])
-
-# ilustrasi endoskopi
 endo_img = pick_first_existing(["ilustrasi_endoskopi.png", "ilustrasi_endoskopi.jpg"])
 
 # ------------------ CSS ------------------
@@ -62,14 +54,12 @@ CUSTOM_CSS = """
   color: #1c1c1c;
 }
 
-/* Atur lebar maksimum konten + rata tengah */
-.block-container {
-  max-width: 1000px;      /* ganti 900/1100 sesuai selera */
-  padding-top: 40px;
-  padding-bottom: 2rem;
-  margin-left: auto;
-  margin-right: auto;
+/* sedikit besarkan font umum */
+body, .stApp, p, li {
+  font-size: 1.05rem;
 }
+
+.block-container { padding-top: 40px; padding-bottom: 2rem; }
 
 h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
@@ -87,13 +77,13 @@ h2, h3 { font-weight:700; }
 /* ====== Ilustrasi ====== */
 .illustrations {
   display: flex;
-  justify-content: center;   /* rata tengah */
+  justify-content: center;
   align-items: center;
   margin-top: 10px;
 }
 .illustration { text-align: center; }
 .illustration img {
-  max-width: 800px;   /* gambar tidak terlalu besar di desktop */
+  max-width: 800px;
   width: 100%;
   height: auto;
   border-radius: 10px;
@@ -132,20 +122,19 @@ h2, h3 { font-weight:700; }
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-# ------------------ HEADER (logo gabungan di tengah) ------------------
+# ------------------ HEADER (2 logo sejajar) ------------------
 with st.container():
-    if logo_header:
-        st.markdown(
-            "<div style='display:flex; justify-content:center; margin-bottom:1rem;'>",
-            unsafe_allow_html=True,
-        )
-        st.image(logo_header, width=800)
-        st.markdown("</div>", unsafe_allow_html=True)
-    else:
-        st.markdown(
-            "<h1 style='text-align:center;'>ISI PERUT – RSUP Dr. Kariadi</h1>",
-            unsafe_allow_html=True,
-        )
+    pad_left, col_logo1, col_logo2, pad_right = st.columns([0.3, 1, 1, 0.3])
+
+    with col_logo1:
+        if logo_kariadi:
+            # spacer agar logo RS Kariadi tampak sedikit lebih turun
+            st.markdown("<div style='height:80px'></div>", unsafe_allow_html=True)
+            st.image(logo_kariadi, width=500)
+
+    with col_logo2:
+        if logo_isi:
+            st.image(logo_isi, width=350)
 
     st.markdown(
         """
@@ -173,34 +162,6 @@ if endo_img:
         unsafe_allow_html=True,
     )
 
-# ===== LINK E-BOOK EDUKASI =====
-st.markdown(
-    """
-    <div style='margin-top:14px; text-align:center;'>
-      <div style='display:inline-block; padding:1rem 1.2rem;
-                  border-radius:14px; background-color:#ffffffcc;
-                  box-shadow:0 4px 12px rgba(0,0,0,.06);
-                  border:1px solid #b2dfdb; max-width:780px;'>
-        <p style='margin:0 0 .5rem 0; font-weight:600; color:#006064;'>
-          Ingin tahu lebih jauh tentang pemeriksaan teropong saluran cerna?
-        </p>
-        <p style='margin:0 0 .75rem 0; font-size:.95rem; color:#455a64;'>
-          Baca e-book edukasi pasien yang berisi penjelasan langkah pemeriksaan,
-          persiapan sebelum tindakan, serta hal-hal penting yang perlu Anda ketahui.
-        </p>
-        <a href="https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/f0KVVnM6SNysvTmFOPMOWA"
-           target="_blank" rel="noopener noreferrer"
-           style="display:inline-block; padding:.55rem 1.1rem;
-                  background:#00b3ad; color:#ffffff; border-radius:999px;
-                  text-decoration:none; font-weight:600;">
-          📖 Buka e-book edukasi ISI PERUT
-        </a>
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
 st.markdown("---")
 
 # ------------------ DESKRIPSI SKRINING ------------------
@@ -208,7 +169,7 @@ st.markdown(
     """
     <h1 style='text-align:center;'>Apakah Saya Perlu Teropong Saluran Cerna?</h1>
     <p style='text-align:center; font-size:1.05rem; color:#333;'>
-      Aplikasi ini membantu menilai apakah Anda memiliki tanda bahaya pada keluhan lambung
+      Aplikasi ini membantu menilai apakah Anda memiliki gejala yang perlu dievaluasi lebih lanjut
       dan faktor risiko kanker kolorektal, serta apakah perlu pemeriksaan endoskopi
       (EGD atau kolonoskopi). Hasil bersifat edukasi dan tidak menggantikan penilaian dokter.
     </p>
@@ -216,7 +177,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ------------------ DATA PRIBADI ------------------
+# ------------------ DATA PRIBADI (bukan expander) ------------------
 st.markdown("### 🧑‍⚕️ Data Pribadi")
 
 name = st.text_input("Nama lengkap")
@@ -230,112 +191,217 @@ today = datetime.today().strftime("%d %b %Y")
 
 st.markdown("---")
 
-# ------------------ PERTANYAAN EGD (Alarm Dyspepsia) ------------------
+# ------------------ PERTANYAAN EGD (Gejala dyspepsia) ------------------
 ALARM_EGD = [
-    "Usia saya **≥50 tahun** dengan keluhan rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas (dispepsia)",
-    "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**",
-    "Berat badan saya **turun tanpa sebab jelas**",
-    "Saya mengalami **perdarahan saluran cerna** atau diberitahu ada **anemia defisiensi besi**",
-    "Saya **kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada (disfagia)**",
-    "Saya **nyeri saat menelan, rasa perih/terbakar/menusuk di dada atau kerongkongan saat makanan/minuman lewat (odynofagia)**",
-    "Saya mengalami **muntah menetap / persisten**",
+    "Usia saya **≥50 tahun** dengan keluhan rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas (dispepsia).",
+    "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**.",
+    "Berat badan saya **turun tanpa sebab jelas**.",
+    "Saya mengalami **perdarahan saluran cerna** atau diberitahu ada **anemia defisiensi besi**.",
+    "Saya **kesulitan menelan**, makanan/minuman terasa tersangkut di tenggorokan atau dada (**disfagia**).",
+    "Saya **nyeri saat menelan**, seperti rasa perih/terbakar/menusuk di dada atau kerongkongan saat makanan/minuman lewat (**odynofagia**).",
+    "Saya mengalami **muntah menetap / persisten**.",
 ]
+
+egd_alarm_sel = []
+gerd_q_score = 0
+gerd_q_summary = ""
 
 with st.expander(
     "Apakah Saya perlu teropong saluran cerna atas (EGD)?",
     expanded=False,
 ):
-    egd_alarm_sel = []
-    st.subheader("🚨 Tanda Bahaya")
+    st.subheader("1. Gejala yang Perlu Dievaluasi Lebih Lanjut")
     for i, q in enumerate(ALARM_EGD):
         if st.checkbox(q, key=f"egd_alarm_{i}"):
             egd_alarm_sel.append(q)
 
-    # Istilah penting di dalam expander EGD
     st.markdown(
         """
-        <p style="font-size:0.95rem; color:#455a64; margin-top:0.5rem;">
-        <b>Istilah penting:</b><br/>
-        • <b>Dispepsia</b>: rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas.<br/>
-        • <b>Disfagia</b>: kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada.<br/>
-        • <b>Odynofagia</b>: nyeri saat menelan, seperti rasa perih/terbakar/menusuk ketika makanan atau minuman lewat di kerongkongan.<br/>
-        </p>
+        **Istilah penting:**
+        - **Dispepsia**: rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas.
+        - **Disfagia**: kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada.
+        - **Odynofagia**: nyeri saat menelan, seperti rasa perih/terbakar/menusuk ketika makanan atau minuman lewat di kerongkongan.
+        """,
+        unsafe_allow_html=False,
+    )
+
+# ------------------ GERD-Q: Skrining GERD ------------------
+GERDQ_OPTIONS = ["0 hari", "1 hari", "2–3 hari", "4–7 hari"]
+
+with st.expander(
+    "Apakah Saya mengidap GERD (Gastroesophageal Reflux Disease)?",
+    expanded=False,
+):
+    st.write(
+        "Jawablah seberapa sering dalam **1 minggu terakhir** Anda mengalami keluhan berikut:"
+    )
+
+    q1 = st.radio(
+        "1. Seberapa sering Anda mengalami rasa terbakar di bagian belakang tulang dada (heartburn)?",
+        GERDQ_OPTIONS,
+        index=0,
+        key="gerdq1",
+    )
+    q2 = st.radio(
+        "2. Seberapa sering Anda mengalami naiknya isi lambung ke arah tenggorokan atau mulut (regurgitasi asam)?",
+        GERDQ_OPTIONS,
+        index=0,
+        key="gerdq2",
+    )
+    q3 = st.radio(
+        "3. Seberapa sering Anda mengalami nyeri ulu hati?",
+        GERDQ_OPTIONS,
+        index=0,
+        key="gerdq3",
+    )
+    q4 = st.radio(
+        "4. Seberapa sering Anda mengalami mual?",
+        GERDQ_OPTIONS,
+        index=0,
+        key="gerdq4",
+    )
+    q5 = st.radio(
+        "5. Seberapa sering keluhan di dada atau perut mengganggu tidur malam Anda?",
+        GERDQ_OPTIONS,
+        index=0,
+        key="gerdq5",
+    )
+    q6 = st.radio(
+        "6. Seberapa sering Anda minum obat tambahan (misal obat maag bebas) untuk mengurangi keluhan di dada atau perut?",
+        GERDQ_OPTIONS,
+        index=0,
+        key="gerdq6",
+    )
+
+    # Skoring GERD-Q: 1–2 positif (0,1,2,3); 3–4 terbalik (3,2,1,0); 5–6 positif (0,1,2,3)
+    def score_pos(ans: str) -> int:
+        return GERDQ_OPTIONS.index(ans)
+
+    def score_neg(ans: str) -> int:
+        idx = GERDQ_OPTIONS.index(ans)
+        return [3, 2, 1, 0][idx]
+
+    gerd_q_score = (
+        score_pos(q1)
+        + score_pos(q2)
+        + score_neg(q3)
+        + score_neg(q4)
+        + score_pos(q5)
+        + score_pos(q6)
+    )
+
+    if gerd_q_score >= 8:
+        badge_gerd = "badge badge-red"
+        gerd_title = f"Skor GERD-Q: {gerd_q_score} — kemungkinan **menderita GERD**."
+        gerd_text = (
+            "Skor ≥8 meningkatkan kemungkinan adanya penyakit refluks asam lambung "
+            "(GERD). Konsultasikan hasil ini ke dokter untuk evaluasi dan penatalaksanaan lebih lanjut."
+        )
+        gerd_q_summary = (
+            f"Skor GERD-Q {gerd_q_score} (≥8) – hasil mengarah ke penyakit refluks asam lambung (GERD)."
+        )
+    else:
+        badge_gerd = "badge badge-green"
+        gerd_title = f"Skor GERD-Q: {gerd_q_score} — kemungkinan **tidak menderita GERD bermakna**."
+        gerd_text = (
+            "Skor <8 membuat kemungkinan GERD menurun. Namun bila keluhan menetap atau berat, "
+            "tetap dianjurkan berkonsultasi ke dokter."
+        )
+        gerd_q_summary = (
+            f"Skor GERD-Q {gerd_q_score} (<8) – kemungkinan kecil penyakit refluks asam lambung (GERD)."
+        )
+
+    st.markdown(
+        f"""
+        <div class="result-card">
+          <span class="{badge_gerd}">{gerd_title}</span><br/>
+          {gerd_text}
+        </div>
         """,
         unsafe_allow_html=True,
     )
 
 # ------------------ PERTANYAAN KOLO ------------------
 ALARM_COLO = [
-    "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**",
-    "Saya **anemia defisiensi besi** atau tampak pucat/lemas",
-    "Berat badan saya **turun tanpa sebab jelas**",
-    "Terjadi **perubahan pola BAB progresif** (>4–6 minggu) disertai darah",
-    "Nyeri perut berat menetap, **diare berdarah/demam** (curiga kolitis/IBD berat)",
+    "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**.",
+    "Saya **anemia defisiensi besi** atau tampak pucat/lemas.",
+    "Berat badan saya **turun tanpa sebab jelas**.",
+    "Terjadi **perubahan pola BAB progresif** (>4–6 minggu) disertai darah.",
+    "Nyeri perut berat menetap, **diare berdarah/demam** (curiga kolitis/IBD berat).",
 ]
 RISK_COLO = [
-    "Usia **≥50 tahun** dengan keluhan saluran cerna bawah",
-    "Ada **keluarga dekat** dengan **kanker kolorektal/polip adenoma**",
-    "**Pemeriksaan tinja darah samar positif**",
-    "Riwayat **IBD** (kolitis ulseratif/Crohn) — evaluasi/monitoring",
-    "Riwayat **polip/operasi CRC** — perlu **surveilans** berkala",
+    "Usia **≥50 tahun** dengan keluhan saluran cerna bawah.",
+    "Ada **keluarga dekat** dengan **kanker kolorektal atau polip adenoma**.",
+    "**Pemeriksaan tinja darah samar positif**.",
+    "Riwayat **IBD** (kolitis ulseratif atau penyakit Crohn) — evaluasi/monitoring.",
+    "Riwayat **polip atau operasi kanker kolorektal** — perlu **surveilans** berkala.",
 ]
 OTHER_COLO = [
-    "**Perubahan kebiasaan BAB** >4–6 minggu tanpa tanda bahaya",
-    "**Konstipasi kronik** tidak membaik dengan pengobatan awal",
-    "**Diare kronik** >4 minggu",
-    "Nyeri perut bawah berulang disertai perubahan BAB",
-    "Keluar **lendir/darah sedikit** berulang dari anus",
-    "Skrining polip/CRC **elektif** sesuai usia/risiko",
+    "**Perubahan kebiasaan BAB** >4–6 minggu tanpa darah atau demam.",
+    "**Konstipasi kronik** tidak membaik dengan pengobatan awal.",
+    "**Diare kronik** >4 minggu.",
+    "Nyeri perut bawah berulang disertai perubahan BAB.",
+    "Keluar **lendir/darah sedikit** berulang dari anus.",
+    "Skrining polip/kanker kolorektal **secara elektif** sesuai usia/risiko.",
 ]
 
+colo_alarm_sel, colo_risk_sel, colo_other_sel = [], [], []
+
 with st.expander(
-    "Apakah Saya perlu teropong saluran cerna bawah (Kolonoskopi)?", expanded=False
+    "Apakah Saya perlu teropong saluran cerna bawah (Kolonoskopi)?",
+    expanded=False,
 ):
     c1, c2, c3 = st.columns(3)
-    colo_alarm_sel, colo_risk_sel, colo_other_sel = [], [], []
+
     with c1:
-        st.subheader("🚨 Tanda Bahaya")
+        st.subheader("1. Gejala yang Perlu Dievaluasi Lebih Lanjut")
         for i, q in enumerate(ALARM_COLO):
             if st.checkbox(q, key=f"colo_alarm_{i}"):
                 colo_alarm_sel.append(q)
+
     with c2:
-        st.subheader("⚠️ Faktor Risiko")
-        for i, q in enumerate(RISK_COLO):
-            if st.checkbox(q, key=f"colo_risk_{i}"):
-                colo_risk_sel.append(q)
-    with c3:
-        st.subheader("🩹 Indikasi Elektif")
+        st.subheader("2. Keluhan atau Kondisi yang Dapat Ditangani Secara Elektif")
+        st.caption(
+            "Keluhan ini umumnya tidak mendesak, tetapi bila berlangsung menetap atau mengganggu, "
+            "kolonoskopi dapat membantu mencari penyebabnya."
+        )
         for i, q in enumerate(OTHER_COLO):
             if st.checkbox(q, key=f"colo_other_{i}"):
                 colo_other_sel.append(q)
 
-    # Keterangan IBD & CRC di dalam expander kolonoskopi
+    with c3:
+        st.subheader("3. Faktor Risiko yang Perlu Diperhatikan")
+        for i, q in enumerate(RISK_COLO):
+            if st.checkbox(q, key=f"colo_risk_{i}"):
+                colo_risk_sel.append(q)
+
     st.markdown(
         """
-        <p style="font-size:0.95rem; color:#455a64; margin-top:0.5rem;">
-        <b>Keterangan:</b><br/>
-        • <b>IBD (Inflammatory Bowel Disease)</b> adalah peradangan kronik pada usus, misalnya kolitis ulseratif atau penyakit Crohn,
-          yang meningkatkan risiko kanker kolorektal.<br/>
-        • <b>CRC (Colorectal Cancer)</b> adalah kanker yang berasal dari usus besar atau rektum. Banyak kasus berawal dari polip yang tumbuh perlahan
-          dan dapat dideteksi serta diangkat dengan kolonoskopi.<br/>
-        </p>
+        **Keterangan:**
+        - **IBD (Inflammatory Bowel Disease)** adalah peradangan kronik pada usus, misalnya kolitis ulseratif atau penyakit Crohn,
+          yang meningkatkan risiko kanker kolorektal.
+        - **CRC (Colorectal Cancer)** adalah kanker yang berasal dari usus besar atau rektum. Banyak kasus berawal dari polip
+          yang tumbuh perlahan dan dapat dideteksi serta diangkat dengan kolonoskopi.
         """,
-        unsafe_allow_html=True,
+        unsafe_allow_html=False,
     )
 
 # ------------------ APCS: Skor Risiko Kanker Kolorektal ------------------
 st.markdown("---")
 st.markdown("### 📊 Skrining Risiko Kanker Kolorektal (APCS)")
 
+# Penentuan skor usia berdasarkan APCS
 if age < 45:
     age_score = 0
 elif 45 <= age <= 69:
     age_score = 2
-else:
+else:  # age >= 70
     age_score = 3
 
+# Skor jenis kelamin
 sex_score = 1 if sex == "Laki-laki" else 0
 
+# Riwayat keluarga CRC derajat pertama
 fhx = st.radio(
     "Riwayat keluarga kanker kolorektal derajat pertama (Ayah/Ibu/Kakak/Adik kandung)",
     ["Tidak ada", "Ada"],
@@ -343,6 +409,7 @@ fhx = st.radio(
 )
 fhx_score = 0 if fhx == "Tidak ada" else 2
 
+# Riwayat merokok
 smoke = st.radio(
     "Riwayat merokok",
     ["Tidak pernah merokok", "Saat ini merokok atau dulu pernah merokok"],
@@ -402,19 +469,26 @@ def verdict(alarm, risk, other, organ):
         return (
             f"⚪ Saat ini **belum tampak kebutuhan mendesak untuk {organ}**",
             "badge badge-gray",
-            "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul tanda bahaya, segera konsultasi ke dokter.",
+            "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul gejala yang perlu dievaluasi lebih lanjut, segera konsultasi ke dokter.",
         )
 
+# EGD: hanya menggunakan gejala yang perlu dievaluasi
 v_egd, b_egd, a_egd = verdict(
     egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)"
 )
+
+# Kolonoskopi
 v_colo, b_colo, a_colo = verdict(
-    colo_alarm_sel, colo_risk_sel, colo_other_sel, "kolonoskopi (saluran cerna bawah)"
+    colo_alarm_sel,
+    colo_risk_sel,
+    colo_other_sel,
+    "kolonoskopi (saluran cerna bawah)",
 )
 
+# Pengaruh APCS terhadap rekomendasi kolonoskopi
 if score_apcs >= 4:
     v_colo = (
-        "🟠 Risiko tinggi berdasarkan APCS — pertimbangkan evaluasi lebih lanjut untuk kanker kolorektal"
+        "🟠 Risiko tinggi berdasarkan skor APCS — perlu evaluasi lebih lanjut untuk kanker kolorektal"
     )
     b_colo = "badge badge-red"
     a_colo += (
@@ -441,7 +515,7 @@ with colB:
         unsafe_allow_html=True,
     )
 
-# ------------------ PDF EXPORTS ------------------
+# ------------------ PDF EXPORT (kop surat RS Kariadi) ------------------
 def build_pdf_letterhead(
     name: str,
     age: int,
@@ -450,13 +524,14 @@ def build_pdf_letterhead(
     v_egd: str,
     a_egd: str,
     r_egd: list,
+    gerd_q_summary: str,
     v_colo: str,
     a_colo: str,
     r_colo: list,
     logo_rs_path: str | None,
     logo_isi_path: str | None,
 ) -> bytes:
-    """Bangun PDF hasil skrining endoskopi (EGD & Kolonoskopi)."""
+    """Bangun PDF hasil skrining endoskopi (EGD & Kolonoskopi) + ringkasan GERD-Q."""
     buf = BytesIO()
     doc = SimpleDocTemplate(
         buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28
@@ -492,6 +567,7 @@ def build_pdf_letterhead(
 
     elems = []
 
+    # ===== HEADER KOP SURAT (teks di tengah, logo ISI PERUT lebih besar) =====
     left_img = (
         Image(logo_rs_path, width=130, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
@@ -540,12 +616,14 @@ def build_pdf_letterhead(
         Spacer(1, 10),
     ]
 
+    # Judul
     elems.append(
         Paragraph("HASIL SKRINING ENDOSKOPI SALURAN CERNA", styles["H1C"])
     )
     elems.append(Paragraph("(EGD & Kolonoskopi)", styles["SmallGray"]))
     elems.append(Spacer(1, 6))
 
+    # Identitas
     ident = [
         Paragraph(f"<b>Tanggal:</b> {today}", styles["Label"]),
         Paragraph(f"<b>Nama:</b> {name if name else '-'}", styles["Label"]),
@@ -555,26 +633,37 @@ def build_pdf_letterhead(
     elems.extend(ident)
     elems.append(Spacer(1, 10))
 
+    # Seksi EGD
     elems.append(Paragraph("<b>1) Saluran Cerna Atas (EGD)</b>", styles["Bold"]))
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
     elems.append(Paragraph(a_egd, styles["Label"]))
     if r_egd:
         elems.append(Spacer(1, 2))
-        elems.append(Paragraph("<b>Faktor yang terdeteksi:</b>", styles["Label"]))
+        elems.append(Paragraph("<b>Gejala yang terdeteksi:</b>", styles["Label"]))
         for r in r_egd:
             elems.append(Paragraph(f"• {r}", styles["Label"]))
+
+    if gerd_q_summary:
+        elems.append(Spacer(1, 6))
+        elems.append(
+            Paragraph("<b>Skor GERD-Q (keluhan refluks lambung):</b>", styles["Label"])
+        )
+        elems.append(Paragraph(gerd_q_summary, styles["Label"]))
+
     elems.append(Spacer(1, 8))
 
+    # Seksi Kolonoskopi
     elems.append(Paragraph("<b>2) Saluran Cerna Bawah (Kolonoskopi)</b>", styles["Bold"]))
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_colo}", styles["Label"]))
     elems.append(Paragraph(a_colo, styles["Label"]))
     if r_colo:
         elems.append(Spacer(1, 2))
-        elems.append(Paragraph("<b>Faktor yang terdeteksi:</b>", styles["Label"]))
+        elems.append(Paragraph("<b>Gejala / faktor yang terdeteksi:</b>", styles["Label"]))
         for r in r_colo:
             elems.append(Paragraph(f"• {r}", styles["Label"]))
     elems.append(Spacer(1, 12))
 
+    # Catatan
     elems.append(
         Paragraph(
             "Hasil ini bersifat edukatif dan tidak menggantikan penilaian dokter. "
@@ -628,6 +717,7 @@ def build_pdf_apcs(
 
     elems = []
 
+    # HEADER LOGO DENGAN TEKS DI TENGAH
     left_img = (
         Image(logo_rs_path, width=130, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
@@ -667,6 +757,7 @@ def build_pdf_apcs(
     elems.append(header_tbl)
     elems.append(Spacer(1, 8))
 
+    # Garis bawah
     elems.append(
         Table(
             [[""]],
@@ -676,6 +767,7 @@ def build_pdf_apcs(
     )
     elems.append(Spacer(1, 10))
 
+    # JUDUL SURAT
     elems.append(
         Paragraph("HASIL SKRINING RISIKO KANKER KOLOREKTAL", styles["Judul"])
     )
@@ -684,12 +776,14 @@ def build_pdf_apcs(
     )
     elems.append(Spacer(1, 12))
 
+    # Identitas
     elems.append(Paragraph(f"<b>Tanggal:</b> {today}", styles["Label"]))
     elems.append(Paragraph(f"<b>Nama:</b> {name}", styles["Label"]))
     elems.append(Paragraph(f"<b>Usia:</b> {age} tahun", styles["Label"]))
     elems.append(Paragraph(f"<b>Jenis Kelamin:</b> {sex}", styles["Label"]))
     elems.append(Spacer(1, 12))
 
+    # Hasil APCS
     elems.append(Paragraph("<b>Hasil Perhitungan APCS:</b>", styles["Label"]))
     elems.append(
         Paragraph(
@@ -701,6 +795,7 @@ def build_pdf_apcs(
     elems.append(Paragraph(pesan_apcs, styles["Label"]))
     elems.append(Spacer(1, 12))
 
+    # Catatan edukasi
     elems.append(
         Paragraph(
             "Catatan: Hasil ini merupakan skrining awal berdasarkan formulir APCS. "
@@ -714,6 +809,7 @@ def build_pdf_apcs(
     return buf.getvalue()
 
 
+# Kumpulkan alasan yang dipilih untuk dicetak di PDF
 r_egd_all = egd_alarm_sel
 r_colo_all = colo_alarm_sel + colo_risk_sel + colo_other_sel
 
@@ -728,6 +824,7 @@ if HAS_RL:
         v_egd,
         a_egd,
         r_egd_all,
+        gerd_q_summary,
         v_colo,
         a_colo,
         r_colo_all,
