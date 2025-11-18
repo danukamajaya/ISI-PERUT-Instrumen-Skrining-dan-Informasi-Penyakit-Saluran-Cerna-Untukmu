@@ -264,7 +264,7 @@ st.markdown(
 
    - **CRC (Colorectal Cancer / kanker kolorektal)** adalah kanker yang tumbuh di **usus besar (kolon)** dan **rektum**. Seringkali berawal dari **polip adenoma** yang tumbuh pelan-pelan.
     
-   - **Polip adenoma** adalah benjolan kecil jinak di dinding usus besar. Polip jenis ini dianggap sebagai “lesi pra-kanker”.
+   - **Polip adenoma** adalah benjolan kecil jinak di dinding usus besar. Polip jenis ini dianggap sebagai "lesi pra-kanker".
 
    Penjelasan ini membantu memahami mengapa beberapa faktor di atas meningkatkan risiko kanker kolorektal dan mengapa kolonoskopi mungkin diperlukan.
         unsafe_allow_html=True,
