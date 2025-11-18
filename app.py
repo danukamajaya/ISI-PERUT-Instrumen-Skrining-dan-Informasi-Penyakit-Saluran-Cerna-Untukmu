@@ -34,11 +34,7 @@ def pick_first_existing(paths):
 # ------------------ ASSET PATHS ------------------
 logo_kariadi = pick_first_existing(["logo_kariadi.png"])
 logo_isi     = pick_first_existing(["logo_isi_perut.png"])
-# ilustrasi gabungan EGD + kolonoskopi
-ilustrasi_endoskopi = pick_first_existing([
-    "ilustrasi_endoskopi.png",
-    "ilustrasi_endoscopy.png",
-])
+endo_img     = pick_first_existing(["ilustrasi_endoskopi.png", "ilustrasi_endoskopi.jpg"])
 
 # ------------------ CSS ------------------
 CUSTOM_CSS = """
@@ -50,21 +46,22 @@ CUSTOM_CSS = """
   background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 55%, #e6fffb 100%);
   color: #1c1c1c;
 }
+
+/* sedikit besarkan font umum */
+body, .stApp, p, li {
+  font-size: 1.05rem;
+}
+
 .block-container { padding-top: 40px; padding-bottom: 2rem; }
 
 h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
 
-/* Turunkan logo RS Kariadi sedikit di tampilan web */
-.logo-rs-offset {
-  height: 80px;
-}
-
 /* ====== Deskripsi ISI PERUT ====== */
 .desc {
   text-align: center;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: #333;
   margin: 0 auto 1.4rem auto;
   max-width: 980px;
@@ -73,24 +70,19 @@ h2, h3 { font-weight:700; }
 /* ====== Ilustrasi ====== */
 .illustrations {
   display: flex;
-  justify-content: center;
+  justify-content: center;   /* rata tengah; ubah ke 'flex-start' bila ingin agak ke kiri */
   align-items: center;
   margin-top: 10px;
 }
-.illustration {
-  text-align: center;
-}
+.illustration { text-align: center; }
 .illustration img {
-  max-width: 420px;
+  max-width: 800px;   /* gambar tidak terlalu besar di desktop */
+  width: 100%;
   height: auto;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,.08);
 }
-.illustration-cap {
-  color: #5b7580;
-  font-size: .9rem;
-  margin-top: .5rem;
-}
+.illustration-cap { color: #5b7580; font-size: .9rem; margin-top: .5rem; }
 
 /* ====== Kartu hasil ====== */
 .result-card {
@@ -101,10 +93,15 @@ h2, h3 { font-weight:700; }
   box-shadow: 0 6px 18px rgba(0,0,0,.06);
   margin-bottom: 1rem;
 }
-.badge { display:inline-block; padding:.35rem .65rem; border-radius:999px; font-weight:700; }
-.badge-red  { background:#ffebee; color:#c62828; border:1px solid #ffcdd2; }
-.badge-green{ background:#e8f5e9; color:#1b5e20; border:1px solid #c8e6c9; }
-.badge-gray { background:#eceff1; color:#37474f; border:1px solid #cfd8dc; }
+.badge {
+  display:inline-block;
+  padding:.35rem .65rem;
+  border-radius:999px;
+  font-weight:700;
+}
+.badge-red   { background:#ffebee; color:#c62828; border:1px solid #ffcdd2; }
+.badge-green { background:#e8f5e9; color:#1b5e20; border:1px solid #c8e6c9; }
+.badge-gray  { background:#eceff1; color:#37474f; border:1px solid #cfd8dc; }
 
 .streamlit-expanderHeader {
   background:#f0fdfa; color:#007C80; font-weight:700; border:1px solid #b2dfdb; border-radius:10px;
@@ -113,7 +110,6 @@ h2, h3 { font-weight:700; }
 /* ====== Responsif ====== */
 @media (max-width: 768px){
   .illustrations { flex-direction: column; align-items: center; }
-  .illustration img { max-width: 100%; }
 }
 </style>
 """
@@ -125,7 +121,8 @@ with st.container():
 
     with col_logo1:
         if logo_kariadi:
-            st.markdown("<div class='logo-rs-offset'></div>", unsafe_allow_html=True)
+            # spacer agar logo RS Kariadi tampak sedikit lebih turun
+            st.markdown("<div style='height:80px'></div>", unsafe_allow_html=True)
             st.image(logo_kariadi, width=500)
 
     with col_logo2:
@@ -145,62 +142,64 @@ with st.container():
         unsafe_allow_html=True,
     )
 
-# ------------------ ILUSTRASI (gambar gabungan) ------------------
-st.markdown("<div class='illustrations'>", unsafe_allow_html=True)
-if ilustrasi_endoskopi:
-    st.markdown("<div class='illustration'>", unsafe_allow_html=True)
-    st.image(ilustrasi_endoskopi)
+# ------------------ ILUSTRASI ------------------
+if endo_img:
+    st.markdown("<div class='illustrations'><div class='illustration'>", unsafe_allow_html=True)
+    st.image(endo_img)
     st.markdown(
-        "<div class='illustration-cap'>Ilustrasi endoskopi saluran cerna atas dan kolonoskopi</div>",
+        "<div class='illustration-cap'>Ilustrasi pemeriksaan endoskopi saluran cerna atas dan bawah</div>"
+        "</div></div>",
         unsafe_allow_html=True,
     )
-    st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("---")
 
-# ------------------ DATA DIRI (WAJIB DIISI) ------------------
-st.markdown("### 🧑‍⚕️ Data diri")
-st.caption("Mohon isi data diri untuk dicantumkan pada hasil skrining.")
+# ------------------ DESKRIPSI SKRINING ------------------
+st.markdown(
+    """
+    <h1 style='text-align:center;'>Apakah Saya Perlu Teropong Saluran Cerna?</h1>
+    <p style='text-align:center; font-size:1.05rem; color:#333;'>
+      Aplikasi ini membantu menilai apakah Anda memiliki tanda bahaya pada keluhan lambung
+      dan faktor risiko kanker kolorektal, serta apakah perlu pemeriksaan endoskopi
+      (EGD atau kolonoskopi). Hasil bersifat edukasi dan tidak menggantikan penilaian dokter.
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
-col_nama, col_usia, col_jk = st.columns([2, 1, 1])
-with col_nama:
-    name = st.text_input("Nama lengkap")
-with col_usia:
+# ------------------ DATA PRIBADI (bukan expander) ------------------
+st.markdown("### 🧑‍⚕️ Data Pribadi")
+
+name = st.text_input("Nama lengkap")
+col_x, col_y = st.columns(2)
+with col_x:
     age = st.number_input("Usia (tahun)", min_value=0, max_value=120, value=45, step=1)
-with col_jk:
+with col_y:
     sex = st.selectbox("Jenis kelamin", ["Laki-laki", "Perempuan", "Lainnya"], index=0)
 
 today = datetime.today().strftime("%d %b %Y")
 
-# ------------------ PERTANYAAN: EGD (FOCUS ALARM FEATURES DISPEPSIA) ------------------
-ALARM_EGD_DYSPEPSIA = [
-    "Usia saya **50 tahun atau lebih**",
-    "Ada **riwayat kanker saluran cerna atas** (lambung/kerongkongan) pada "
-    "**keluarga tingkat pertama** (orang tua, saudara kandung, atau anak)",
-    "Saya mengalami **penurunan berat badan yang tidak direncanakan**",
-    "Dokter mengatakan saya mengalami **perdarahan saluran cerna** "
-    "atau **anemia defisiensi besi**",
-    "Saya **sulit menelan** (disfagia)",
-    "Saya **nyeri saat menelan** (odynofagia)",
-    "Saya mengalami **muntah menetap atau berulang**",
-    "Pemeriksaan seperti **USG, rontgen, atau CT-scan** menunjukkan "
-    "**kelainan organik pada saluran cerna atas**",
+st.markdown("---")
+
+# ------------------ PERTANYAAN EGD (Alarm Dyspepsia) ------------------
+ALARM_EGD = [
+    "Usia saya **≥50 tahun** dengan keluhan dispepsia",
+    "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**",
+    "Berat badan saya **turun tanpa sebab jelas**",
+    "Saya mengalami **perdarahan saluran cerna** atau diberitahu ada **anemia defisiensi besi**",
+    "Saya **sulit menelan (disfagia)**",
+    "Saya **nyeri saat menelan (odynofagia)**",
+    "Saya mengalami **muntah menetap / persisten**",
+    "Pemeriksaan penunjang menunjukkan **kelainan organik** pada saluran cerna atas",
 ]
 
-with st.expander("Apakah Saya perlu teropong saluran cerna **atas (EGD)** ?", expanded=False):
-    st.subheader("🚨 Tanda bahaya pada keluhan dispepsia")
-    st.caption(
-        "Checklist berikut diadaptasi dari kriteria tanda bahaya (alarm features) "
-        "pada pasien dengan keluhan dispepsia. Jika salah satu tercentang, "
-        "Anda sebaiknya segera berkonsultasi ke dokter."
-    )
+with st.expander("Apakah Saya perlu teropong saluran cerna atas (EGD)? — fokus tanda bahaya dispepsia", expanded=False):
     egd_alarm_sel = []
-    for i, q in enumerate(ALARM_EGD_DYSPEPSIA):
+    for i, q in enumerate(ALARM_EGD):
         if st.checkbox(q, key=f"egd_alarm_{i}"):
             egd_alarm_sel.append(q)
 
-# ------------------ PERTANYAAN: KOLO ------------------
+# ------------------ PERTANYAAN KOLO (seperti sebelumnya) ------------------
 ALARM_COLO = [
     "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**",
     "Saya **anemia defisiensi besi** atau tampak pucat/lemas",
@@ -224,7 +223,7 @@ OTHER_COLO = [
     "Skrining polip/CRC **elektif** sesuai usia/risiko",
 ]
 
-with st.expander("Apakah Saya perlu teropong saluran cerna **bawah (Kolonoskopi)** ?", expanded=False):
+with st.expander("Apakah Saya perlu teropong saluran cerna bawah (Kolonoskopi)?", expanded=False):
     c1, c2, c3 = st.columns(3)
     colo_alarm_sel, colo_risk_sel, colo_other_sel = [], [], []
     with c1:
@@ -243,22 +242,121 @@ with st.expander("Apakah Saya perlu teropong saluran cerna **bawah (Kolonoskopi)
             if st.checkbox(q, key=f"colo_other_{i}"):
                 colo_other_sel.append(q)
 
-# ------------------ HASIL SKRINING ------------------
+# ------------------ APCS: Skor Risiko Kanker Kolorektal ------------------
+st.markdown("---")
+st.markdown("### 📊 Skrining Risiko Kanker Kolorektal (APCS)")
+
+# Penentuan skor usia berdasarkan APCS
+if age < 45:
+    age_score = 0
+elif 45 <= age <= 69:
+    age_score = 2
+else:  # age >= 70
+    age_score = 3
+
+# Skor jenis kelamin
+sex_score = 1 if sex == "Laki-laki" else 0
+
+# Riwayat keluarga CRC derajat pertama
+fhx = st.radio(
+    "Riwayat keluarga kanker kolorektal derajat pertama (Ayah/Ibu/Kakak/Adik kandung)",
+    ["Tidak ada", "Ada"],
+    index=0
+)
+fhx_score = 0 if fhx == "Tidak ada" else 2
+
+# Riwayat merokok
+smoke = st.radio(
+    "Riwayat merokok",
+    ["Tidak pernah merokok", "Saat ini merokok atau dulu pernah merokok"],
+    index=0
+)
+smoke_score = 0 if smoke.startswith("Tidak") else 1
+
+score_apcs = age_score + sex_score + fhx_score + smoke_score
+
+if score_apcs <= 1:
+    kategori_apcs = "Risiko Rendah (0–1)"
+    pesan_apcs = (
+        "Anda termasuk kelompok risiko rendah kanker kolorektal berdasarkan skor APCS. "
+        "Tetap jaga pola hidup sehat dan lakukan penilaian ulang secara berkala sesuai anjuran tenaga kesehatan."
+    )
+    badge_apcs = "badge badge-green"
+elif score_apcs <= 3:
+    kategori_apcs = "Risiko Sedang (2–3)"
+    pesan_apcs = (
+        "Anda termasuk kelompok risiko sedang. Disarankan berkonsultasi ke fasilitas kesehatan "
+        "untuk mempertimbangkan skrining Tes Darah Samar Feses (iFOBT) secara berkala."
+    )
+    badge_apcs = "badge badge-gray"
+else:
+    kategori_apcs = "Risiko Tinggi (4–7)"
+    pesan_apcs = (
+        "Anda termasuk kelompok risiko tinggi kanker kolorektal. Disarankan berkonsultasi ke fasilitas kesehatan "
+        "untuk pemeriksaan lebih lanjut, seperti colok dubur, Tes Darah Samar Feses (iFOBT), dan kemungkinan kolonoskopi."
+    )
+    badge_apcs = "badge badge-red"
+
+st.markdown(
+    f"""
+    <div class="result-card">
+      <span class="{badge_apcs}">Skor APCS: <b>{score_apcs}</b> — {kategori_apcs}</span><br/>
+      {pesan_apcs}
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ------------------ HASIL SKRINING EGD & KOLO ------------------
 def verdict(alarm, risk, other, organ):
     if alarm:
-        return f"🔴 Anda **perlu {organ} segera**", "badge badge-red", "Segera konsultasi ke dokter penyakit dalam."
+        return (
+            f"🔴 Anda **perlu {organ} segera**",
+            "badge badge-red",
+            "Segera konsultasi ke dokter penyakit dalam atau IGD, terutama bila keluhan berat atau mendadak.",
+        )
     elif risk or other:
-        return f"🟢 Anda **dapat menjadwalkan {organ} (elektif)**", "badge badge-green", "Buat janji di poliklinik untuk pemeriksaan lebih lanjut."
+        return (
+            f"🟢 Anda **dapat menjadwalkan {organ} (elektif)**",
+            "badge badge-green",
+            "Buat janji di poliklinik untuk pemeriksaan dan penilaian lebih lanjut.",
+        )
     else:
-        return f"⚪ Saat ini **belum tampak kebutuhan mendesak untuk {organ}**", "badge badge-gray", (
-            "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul tanda bahaya, segera konsultasi ke dokter."
+        return (
+            f"⚪ Saat ini **belum tampak kebutuhan mendesak untuk {organ}**",
+            "badge badge-gray",
+            "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul tanda bahaya, segera konsultasi ke dokter.",
         )
 
-# EGD: sekarang hanya memakai daftar tanda bahaya dispepsia
-v_egd,  b_egd,  a_egd  = verdict(egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)")
-v_colo, b_colo, a_colo = verdict(colo_alarm_sel, colo_risk_sel, colo_other_sel, "kolonoskopi (saluran cerna bawah)")
+# EGD: hanya menggunakan tanda bahaya (risk & other dikosongkan)
+v_egd, b_egd, a_egd = verdict(egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)")
 
-st.subheader("📋 Hasil Skrining")
+# Kolonoskopi: seperti sebelumnya
+v_colo, b_colo, a_colo = verdict(
+    colo_alarm_sel,
+    colo_risk_sel,
+    colo_other_sel,
+    "kolonoskopi (saluran cerna bawah)",
+)
+
+# Pengaruh APCS terhadap rekomendasi kolonoskopi
+if score_apcs >= 4:
+    # risiko tinggi: perkuat rekomendasi kolonoskopi
+    v_colo = "🟠 Risiko tinggi berdasarkan APCS — pertimbangkan evaluasi lebih lanjut untuk kanker kolorektal"
+    b_colo = "badge badge-red"
+    a_colo += (
+        " Selain itu, skor APCS Anda berada pada kelompok risiko tinggi (4–7). "
+        "Disarankan berkonsultasi ke fasilitas kesehatan untuk pemeriksaan colok dubur, Tes Darah Samar Feses (iFOBT), "
+        "dan pertimbangan kolonoskopi."
+    )
+elif 2 <= score_apcs <= 3:
+    # risiko sedang: tambahkan catatan
+    a_colo += (
+        " Skor APCS menunjukkan risiko sedang (2–3). "
+        "Diskusikan dengan dokter mengenai kebutuhan skrining iFOBT dan evaluasi lanjutan."
+    )
+
+st.subheader("📋 Ringkasan Hasil Skrining Endoskopi")
 colA, colB = st.columns(2)
 with colA:
     st.markdown(
@@ -273,49 +371,99 @@ with colB:
 
 # ------------------ PDF EXPORT (kop surat RS Kariadi) ------------------
 def build_pdf_letterhead(
-    name: str, age: int, sex: str, today: str,
-    v_egd: str, a_egd: str, r_egd: list,
-    v_colo: str, a_colo: str, r_colo: list,
-    logo_rs_path: str | None, logo_isi_path: str | None,
+    name: str,
+    age: int,
+    sex: str,
+    today: str,
+    v_egd: str,
+    a_egd: str,
+    r_egd: list,
+    v_colo: str,
+    a_colo: str,
+    r_colo: list,
+    logo_rs_path: str | None,
+    logo_isi_path: str | None,
 ) -> bytes:
-    """Bangun PDF hasil skrining dengan kop RS Kariadi dan dua kesimpulan (EGD & Kolonoskopi)."""
+    """Bangun PDF hasil skrining endoskopi (EGD & Kolonoskopi)."""
     buf = BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28)
+    doc = SimpleDocTemplate(
+        buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28
+    )
 
     styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle(name="H1C", parent=styles["Title"], alignment=1, leading=22, spaceAfter=12))
-    styles.add(ParagraphStyle(name="SmallGray", parent=styles["Normal"], textColor=colors.HexColor("#444"), fontSize=10))
+    styles.add(
+        ParagraphStyle(
+            name="H1C",
+            parent=styles["Title"],
+            alignment=1,
+            leading=22,
+            spaceAfter=12,
+        )
+    )
+    styles.add(
+        ParagraphStyle(
+            name="SmallGray",
+            parent=styles["Normal"],
+            textColor=colors.HexColor("#444"),
+            fontSize=10,
+        )
+    )
     styles.add(ParagraphStyle(name="Label", parent=styles["Normal"], spaceAfter=2))
-    styles.add(ParagraphStyle(name="Bold", parent=styles["Normal"], fontName=styles["Heading4"].fontName, spaceAfter=4))
+    styles.add(
+        ParagraphStyle(
+            name="Bold",
+            parent=styles["Normal"],
+            fontName=styles["Heading4"].fontName,
+            spaceAfter=4,
+        )
+    )
 
     elems = []
 
     # Header: dua logo (RS & ISI PERUT)
-    left_img = Image(logo_rs_path, width=120, height=54) if logo_rs_path and Path(logo_rs_path).exists() else ""
-    right_img = Image(logo_isi_path, width=95, height=95) if logo_isi_path and Path(logo_isi_path).exists() else ""
+    left_img = (
+        Image(logo_rs_path, width=120, height=54)
+        if logo_rs_path and Path(logo_rs_path).exists()
+        else ""
+    )
+    right_img = (
+        Image(logo_isi_path, width=95, height=95)
+        if logo_isi_path and Path(logo_isi_path).exists()
+        else ""
+    )
     header_tbl = Table(
-        [[left_img, Paragraph(
-            "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
-            "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
-            "Telepon: (024) 8413993, 8413476, 8413764 &nbsp;&nbsp; "
-            "<font color='#2e7d32'><b>Fax:</b> (024) 8318617</font><br/>"
-            "Website: http://www.rskariadi.co.id", styles["Normal"]
-        ), right_img]],
+        [
+            [
+                left_img,
+                Paragraph(
+                    "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
+                    "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
+                    "Telepon: (024) 8413993, 8413476, 8413764<br/>"
+                    "Website: http://www.rskariadi.co.id",
+                    styles["Normal"],
+                ),
+                right_img,
+            ]
+        ],
         colWidths=[130, 330, 95],
         hAlign="LEFT",
     )
-    header_tbl.setStyle(TableStyle([
-        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
-    ]))
+    header_tbl.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
     elems.append(header_tbl)
     elems += [
         Spacer(1, 6),
-        Table([[""]], colWidths=[555], style=[("LINEBELOW", (0,0), (0,0), 1, colors.HexColor("#9dd8d3"))]),
+        Table(
+            [[""]],
+            colWidths=[555],
+            style=[("LINEBELOW", (0, 0), (0, 0), 1, colors.HexColor("#9dd8d3"))],
+        ),
         Spacer(1, 8),
     ]
 
     # Judul
-    elems.append(Paragraph("HASIL SKRINING ENDOSKOPI SALURAN CERNA", styles["H1C"]))
+    elems.append(
+        Paragraph("HASIL SKRINING ENDOSKOPI SALURAN CERNA", styles["H1C"])
+    )
     elems.append(Paragraph("(EGD & Kolonoskopi)", styles["SmallGray"]))
     elems.append(Spacer(1, 6))
 
@@ -352,36 +500,189 @@ def build_pdf_letterhead(
     elems.append(Spacer(1, 12))
 
     # Catatan
-    elems.append(Paragraph(
-        "Hasil ini bersifat edukatif dan tidak menggantikan penilaian dokter. "
-        "Jika keluhan berat, mendadak, atau menetap, segera konsultasikan ke dokter penyakit dalam.",
-        styles["SmallGray"],
-    ))
+    elems.append(
+        Paragraph(
+            "Hasil ini bersifat edukatif dan tidak menggantikan penilaian dokter. "
+            "Jika keluhan berat, mendadak, atau menetap, segera konsultasikan ke dokter penyakit dalam.",
+            styles["SmallGray"],
+        )
+    )
+
+    doc.build(elems)
+    return buf.getvalue()
+
+
+def build_pdf_apcs(
+    name: str,
+    age: int,
+    sex: str,
+    today: str,
+    score_apcs: int,
+    kategori_apcs: str,
+    pesan_apcs: str,
+    logo_rs_path: str | None,
+    logo_isi_path: str | None,
+) -> bytes:
+    """Bangun PDF hasil skrining risiko kanker kolorektal (APCS)."""
+    buf = BytesIO()
+    doc = SimpleDocTemplate(
+        buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28
+    )
+
+    styles = getSampleStyleSheet()
+    styles.add(
+        ParagraphStyle(
+            name="Judul",
+            parent=styles["Title"],
+            alignment=1,
+            fontSize=14,
+            leading=18,
+        )
+    )
+    styles.add(
+        ParagraphStyle(
+            name="Small",
+            parent=styles["Normal"],
+            fontSize=10,
+            textColor=colors.HexColor("#555"),
+        )
+    )
+    styles.add(ParagraphStyle(name="Label", parent=styles["Normal"], fontSize=11, spaceAfter=4))
+
+    elems = []
+
+    # HEADER LOGO
+    left_img = (
+        Image(logo_rs_path, width=120, height=54)
+        if logo_rs_path and Path(logo_rs_path).exists()
+        else ""
+    )
+    right_img = (
+        Image(logo_isi_path, width=90, height=90)
+        if logo_isi_path and Path(logo_isi_path).exists()
+        else ""
+    )
+
+    header_tbl = Table(
+        [
+            [
+                left_img,
+                Paragraph(
+                    "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
+                    "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
+                    "Telepon: (024) 8413993<br/>Website: www.rskariadi.co.id",
+                    styles["Small"],
+                ),
+                right_img,
+            ]
+        ],
+        colWidths=[130, 330, 95],
+    )
+
+    header_tbl.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
+    elems.append(header_tbl)
+    elems.append(Spacer(1, 8))
+
+    # Garis bawah
+    elems.append(
+        Table(
+            [[""]],
+            colWidths=[555],
+            style=[("LINEBELOW", (0, 0), (0, 0), 1, colors.HexColor("#8ac7c3"))],
+        )
+    )
+    elems.append(Spacer(1, 10))
+
+    # JUDUL SURAT
+    elems.append(
+        Paragraph("HASIL SKRINING RISIKO KANKER KOLOREKTAL", styles["Judul"])
+    )
+    elems.append(
+        Paragraph("(APCS – Asia-Pacific Colorectal Screening Score)", styles["Small"])
+    )
+    elems.append(Spacer(1, 12))
+
+    # Identitas
+    elems.append(Paragraph(f"<b>Tanggal:</b> {today}", styles["Label"]))
+    elems.append(Paragraph(f"<b>Nama:</b> {name}", styles["Label"]))
+    elems.append(Paragraph(f"<b>Usia:</b> {age} tahun", styles["Label"]))
+    elems.append(Paragraph(f"<b>Jenis Kelamin:</b> {sex}", styles["Label"]))
+    elems.append(Spacer(1, 12))
+
+    # Hasil APCS
+    elems.append(Paragraph("<b>Hasil Perhitungan APCS:</b>", styles["Label"]))
+    elems.append(
+        Paragraph(
+            f"<b>Skor:</b> {score_apcs} — <b>Kategori Risiko:</b> {kategori_apcs}",
+            styles["Label"],
+        )
+    )
+    elems.append(Spacer(1, 6))
+    elems.append(Paragraph(pesan_apcs, styles["Label"]))
+    elems.append(Spacer(1, 12))
+
+    # Catatan edukasi
+    elems.append(
+        Paragraph(
+            "Catatan: Hasil ini merupakan skrining awal berdasarkan formulir APCS. "
+            "Pemeriksaan lanjutan seperti Tes Darah Samar Feses (iFOBT), colok dubur, "
+            "atau kolonoskopi akan ditentukan oleh dokter sesuai protokol nasional.",
+            styles["Small"],
+        )
+    )
 
     doc.build(elems)
     return buf.getvalue()
 
 # Kumpulkan alasan yang dipilih untuk dicetak di PDF
-r_egd_all = (egd_alarm_sel if 'egd_alarm_sel' in locals() else [])
-r_colo_all = (colo_alarm_sel if 'colo_alarm_sel' in locals() else []) + \
-             (colo_risk_sel if 'colo_risk_sel' in locals() else []) + \
-             (colo_other_sel if 'colo_other_sel' in locals() else [])
+r_egd_all = egd_alarm_sel
+r_colo_all = colo_alarm_sel + colo_risk_sel + colo_other_sel
 
 st.markdown("")
 
 if HAS_RL:
     pdf_bytes = build_pdf_letterhead(
-        name or "", int(age), sex, today,
-        v_egd, a_egd, r_egd_all,
-        v_colo, a_colo, r_colo_all,
-        logo_kariadi, logo_isi,
+        name or "",
+        int(age),
+        sex,
+        today,
+        v_egd,
+        a_egd,
+        r_egd_all,
+        v_colo,
+        a_colo,
+        r_colo_all,
+        logo_kariadi,
+        logo_isi,
     )
-    st.download_button(
-        "⬇️ Unduh Surat Hasil (PDF)",
-        data=pdf_bytes,
-        file_name=f"Hasil_Skrining_ISI_PERUT_{today.replace(' ','_')}.pdf",
-        mime="application/pdf",
+
+    pdf_apcs_bytes = build_pdf_apcs(
+        name=name or "",
+        age=int(age),
+        sex=sex,
+        today=today,
+        score_apcs=score_apcs,
+        kategori_apcs=kategori_apcs,
+        pesan_apcs=pesan_apcs,
+        logo_rs_path=logo_kariadi,
+        logo_isi_path=logo_isi,
     )
+
+    col_pdf1, col_pdf2 = st.columns(2)
+    with col_pdf1:
+        st.download_button(
+            "⬇️ Unduh Surat Hasil Endoskopi (PDF)",
+            data=pdf_bytes,
+            file_name=f"Hasil_Skrining_ISI_PERUT_{today.replace(' ','_')}.pdf",
+            mime="application/pdf",
+        )
+    with col_pdf2:
+        st.download_button(
+            "⬇️ Unduh Surat Hasil Risiko Kanker Kolorektal (APCS)",
+            data=pdf_apcs_bytes,
+            file_name=f"Hasil_APCS_{today.replace(' ','_')}.pdf",
+            mime="application/pdf",
+        )
 else:
     st.info(
         "Fitur unduh PDF membutuhkan paket **reportlab**.\n\n"
@@ -392,4 +693,6 @@ else:
 
 # ------------------ FOOTER ------------------
 st.markdown("---")
-st.caption("© 2025 | Aplikasi edukasi oleh **dr. Danu Kamajaya, Sp.PD** – RSUP Dr. Kariadi Semarang – Versi Awam")
+st.caption(
+    "© 2025 | Aplikasi edukasi oleh **dr. Danu Kamajaya, Sp.PD** – RSUP Dr. Kariadi Semarang – Versi Awam"
+)
