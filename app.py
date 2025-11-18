@@ -12,7 +12,14 @@ HAS_RL = True
 try:
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
+    from reportlab.platypus import (
+        SimpleDocTemplate,
+        Paragraph,
+        Spacer,
+        Image,
+        Table,
+        TableStyle,
+    )
     from reportlab.lib import colors
 except Exception:
     HAS_RL = False
@@ -33,8 +40,8 @@ def pick_first_existing(paths):
 
 # ------------------ ASSET PATHS ------------------
 logo_kariadi = pick_first_existing(["logo_kariadi.png"])
-logo_isi     = pick_first_existing(["logo_isi_perut.png"])
-endo_img     = pick_first_existing(["ilustrasi_endoskopi.png", "ilustrasi_endoskopi.jpg"])
+logo_isi = pick_first_existing(["logo_isi_perut.png"])
+endo_img = pick_first_existing(["ilustrasi_endoskopi.png", "ilustrasi_endoskopi.jpg"])
 
 # ------------------ CSS ------------------
 CUSTOM_CSS = """
@@ -70,7 +77,7 @@ h2, h3 { font-weight:700; }
 /* ====== Ilustrasi ====== */
 .illustrations {
   display: flex;
-  justify-content: center;   /* rata tengah; ubah ke 'flex-start' bila ingin agak ke kiri */
+  justify-content: center;   /* rata tengah */
   align-items: center;
   margin-top: 10px;
 }
@@ -144,7 +151,10 @@ with st.container():
 
 # ------------------ ILUSTRASI ------------------
 if endo_img:
-    st.markdown("<div class='illustrations'><div class='illustration'>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='illustrations'><div class='illustration'>",
+        unsafe_allow_html=True,
+    )
     st.image(endo_img)
     st.markdown(
         "<div class='illustration-cap'>Ilustrasi pemeriksaan endoskopi saluran cerna atas dan bawah</div>"
@@ -164,7 +174,7 @@ st.markdown(
       (EGD atau kolonoskopi). Hasil bersifat edukasi dan tidak menggantikan penilaian dokter.
     </p>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 # ------------------ DATA PRIBADI (bukan expander) ------------------
@@ -193,7 +203,10 @@ ALARM_EGD = [
     "Pemeriksaan penunjang menunjukkan **kelainan organik** pada saluran cerna atas",
 ]
 
-with st.expander("Apakah Saya perlu teropong saluran cerna atas (EGD)? — fokus tanda bahaya dispepsia", expanded=False):
+with st.expander(
+    "Apakah Saya perlu teropong saluran cerna atas (EGD)? — fokus tanda bahaya dispepsia",
+    expanded=False,
+):
     egd_alarm_sel = []
     for i, q in enumerate(ALARM_EGD):
         if st.checkbox(q, key=f"egd_alarm_{i}"):
@@ -223,7 +236,9 @@ OTHER_COLO = [
     "Skrining polip/CRC **elektif** sesuai usia/risiko",
 ]
 
-with st.expander("Apakah Saya perlu teropong saluran cerna bawah (Kolonoskopi)?", expanded=False):
+with st.expander(
+    "Apakah Saya perlu teropong saluran cerna bawah (Kolonoskopi)?", expanded=False
+):
     c1, c2, c3 = st.columns(3)
     colo_alarm_sel, colo_risk_sel, colo_other_sel = [], [], []
     with c1:
@@ -261,7 +276,7 @@ sex_score = 1 if sex == "Laki-laki" else 0
 fhx = st.radio(
     "Riwayat keluarga kanker kolorektal derajat pertama (Ayah/Ibu/Kakak/Adik kandung)",
     ["Tidak ada", "Ada"],
-    index=0
+    index=0,
 )
 fhx_score = 0 if fhx == "Tidak ada" else 2
 
@@ -269,7 +284,7 @@ fhx_score = 0 if fhx == "Tidak ada" else 2
 smoke = st.radio(
     "Riwayat merokok",
     ["Tidak pernah merokok", "Saat ini merokok atau dulu pernah merokok"],
-    index=0
+    index=0,
 )
 smoke_score = 0 if smoke.startswith("Tidak") else 1
 
@@ -328,8 +343,11 @@ def verdict(alarm, risk, other, organ):
             "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul tanda bahaya, segera konsultasi ke dokter.",
         )
 
+
 # EGD: hanya menggunakan tanda bahaya (risk & other dikosongkan)
-v_egd, b_egd, a_egd = verdict(egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)")
+v_egd, b_egd, a_egd = verdict(
+    egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)"
+)
 
 # Kolonoskopi: seperti sebelumnya
 v_colo, b_colo, a_colo = verdict(
@@ -342,7 +360,9 @@ v_colo, b_colo, a_colo = verdict(
 # Pengaruh APCS terhadap rekomendasi kolonoskopi
 if score_apcs >= 4:
     # risiko tinggi: perkuat rekomendasi kolonoskopi
-    v_colo = "🟠 Risiko tinggi berdasarkan APCS — pertimbangkan evaluasi lebih lanjut untuk kanker kolorektal"
+    v_colo = (
+        "🟠 Risiko tinggi berdasarkan APCS — pertimbangkan evaluasi lebih lanjut untuk kanker kolorektal"
+    )
     b_colo = "badge badge-red"
     a_colo += (
         " Selain itu, skor APCS Anda berada pada kelompok risiko tinggi (4–7). "
@@ -420,44 +440,53 @@ def build_pdf_letterhead(
 
     elems = []
 
-    # Header: dua logo (RS & ISI PERUT)
+    # ===== HEADER KOP SURAT BARU (teks di tengah, logo ISI PERUT lebih besar) =====
     left_img = (
-        Image(logo_rs_path, width=120, height=54)
+        Image(logo_rs_path, width=130, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=95, height=95)
+        Image(logo_isi_path, width=120, height=120)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
-    header_tbl = Table(
-        [
-            [
-                left_img,
-                Paragraph(
-                    "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
-                    "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
-                    "Telepon: (024) 8413993, 8413476, 8413764<br/>"
-                    "Website: http://www.rskariadi.co.id",
-                    styles["Normal"],
-                ),
-                right_img,
-            ]
-        ],
-        colWidths=[130, 330, 95],
-        hAlign="LEFT",
+
+    kop_text = Paragraph(
+        "<para align='center'>"
+        "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
+        "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
+        "Telepon: (024) 8413993<br/>"
+        "Website: www.rskariadi.co.id"
+        "</para>",
+        styles["Normal"],
     )
-    header_tbl.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
+
+    header_tbl = Table(
+        [[left_img, kop_text, right_img]],
+        colWidths=[135, 300, 120],
+        hAlign="CENTER",
+    )
+    header_tbl.setStyle(
+        TableStyle(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("ALIGN", (1, 0), (1, 0), "CENTER"),
+                ("LEFTPADDING", (0, 0), (0, 0), 0),
+                ("RIGHTPADDING", (2, 0), (2, 0), 0),
+            ]
+        )
+    )
+
     elems.append(header_tbl)
     elems += [
         Spacer(1, 6),
         Table(
             [[""]],
             colWidths=[555],
-            style=[("LINEBELOW", (0, 0), (0, 0), 1, colors.HexColor("#9dd8d3"))],
+            style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         ),
-        Spacer(1, 8),
+        Spacer(1, 10),
     ]
 
     # Judul
@@ -547,39 +576,49 @@ def build_pdf_apcs(
             textColor=colors.HexColor("#555"),
         )
     )
-    styles.add(ParagraphStyle(name="Label", parent=styles["Normal"], fontSize=11, spaceAfter=4))
+    styles.add(
+        ParagraphStyle(name="Label", parent=styles["Normal"], fontSize=11, spaceAfter=4)
+    )
 
     elems = []
 
-    # HEADER LOGO
+    # HEADER LOGO DENGAN TEKS DI TENGAH
     left_img = (
-        Image(logo_rs_path, width=120, height=54)
+        Image(logo_rs_path, width=130, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=90, height=90)
+        Image(logo_isi_path, width=115, height=115)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
 
-    header_tbl = Table(
-        [
-            [
-                left_img,
-                Paragraph(
-                    "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
-                    "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
-                    "Telepon: (024) 8413993<br/>Website: www.rskariadi.co.id",
-                    styles["Small"],
-                ),
-                right_img,
-            ]
-        ],
-        colWidths=[130, 330, 95],
+    kop_text = Paragraph(
+        "<para align='center'>"
+        "<b>RUMAH SAKIT UMUM PUSAT DOKTER KARIADI</b><br/>"
+        "Jalan Dr. Sutomo No 16 Semarang PO BOX 1104<br/>"
+        "Telepon: (024) 8413993<br/>Website: www.rskariadi.co.id"
+        "</para>",
+        styles["Small"],
     )
 
-    header_tbl.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
+    header_tbl = Table(
+        [[left_img, kop_text, right_img]],
+        colWidths=[135, 300, 120],
+        hAlign="CENTER",
+    )
+    header_tbl.setStyle(
+        TableStyle(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("ALIGN", (1, 0), (1, 0), "CENTER"),
+                ("LEFTPADDING", (0, 0), (0, 0), 0),
+                ("RIGHTPADDING", (2, 0), (2, 0), 0),
+            ]
+        )
+    )
+
     elems.append(header_tbl)
     elems.append(Spacer(1, 8))
 
@@ -588,7 +627,7 @@ def build_pdf_apcs(
         Table(
             [[""]],
             colWidths=[555],
-            style=[("LINEBELOW", (0, 0), (0, 0), 1, colors.HexColor("#8ac7c3"))],
+            style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         )
     )
     elems.append(Spacer(1, 10))
@@ -633,6 +672,7 @@ def build_pdf_apcs(
 
     doc.build(elems)
     return buf.getvalue()
+
 
 # Kumpulkan alasan yang dipilih untuk dicetak di PDF
 r_egd_all = egd_alarm_sel
