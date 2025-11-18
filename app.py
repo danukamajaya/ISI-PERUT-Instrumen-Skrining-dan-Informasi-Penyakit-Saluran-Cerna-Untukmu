@@ -204,10 +204,11 @@ ALARM_EGD = [
 ]
 
 with st.expander(
-    "Apakah Saya perlu teropong saluran cerna atas (EGD)? — fokus tanda bahaya dispepsia",
+    "Apakah Saya perlu teropong saluran cerna atas (EGD)?",
     expanded=False,
 ):
     egd_alarm_sel = []
+    st.subheader("🚨 Tanda Bahaya")
     for i, q in enumerate(ALARM_EGD):
         if st.checkbox(q, key=f"egd_alarm_{i}"):
             egd_alarm_sel.append(q)
