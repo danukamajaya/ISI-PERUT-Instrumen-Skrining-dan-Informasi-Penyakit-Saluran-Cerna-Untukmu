@@ -28,7 +28,7 @@ except Exception:
 st.set_page_config(
     page_title="ISI PERUT – Instrumen Skrining dan Informasi Penyakit Saluran Cerna",
     page_icon="🩺",
-    layout="wide",
+    layout="centered",
 )
 
 # ------------------ HELPER ------------------
