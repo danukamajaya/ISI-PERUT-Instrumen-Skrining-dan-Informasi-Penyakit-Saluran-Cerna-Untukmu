@@ -589,7 +589,7 @@ def build_pdf_apcs(
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=115, height=115)
+        Image(logo_isi_path, width=130, height=130)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
