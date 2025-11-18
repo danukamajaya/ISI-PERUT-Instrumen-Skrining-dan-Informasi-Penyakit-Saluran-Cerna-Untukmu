@@ -257,7 +257,7 @@ with st.expander(
             if st.checkbox(q, key=f"colo_other_{i}"):
                 colo_other_sel.append(q)
 
- st.markdown(
+     st.markdown(
         """
         **Keterangan istilah penting:**
 
@@ -280,7 +280,7 @@ with st.expander(
         meningkatkan risiko kanker kolorektal dan mengapa kolonoskopi mungkin diperlukan.
         """,
         unsafe_allow_html=True,
-    )
+)
 
 # ------------------ APCS: Skor Risiko Kanker Kolorektal ------------------
 st.markdown("---")
