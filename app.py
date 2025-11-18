@@ -28,7 +28,7 @@ except Exception:
 st.set_page_config(
     page_title="ISI PERUT – Instrumen Skrining dan Informasi Penyakit Saluran Cerna",
     page_icon="🩺",
-    layout="centered",
+    layout="wide",
 )
 
 # ------------------ HELPER ------------------
@@ -137,11 +137,9 @@ with st.container():
             "<div style='display:flex; justify-content:center; margin-bottom:1rem;'>",
             unsafe_allow_html=True,
         )
-        # atur lebar sesuai selera (700–900 biasanya pas)
         st.image(logo_header, width=800)
         st.markdown("</div>", unsafe_allow_html=True)
     else:
-        # fallback kalau logo_header belum tersedia: pakai teks saja
         st.markdown(
             "<h1 style='text-align:center;'>ISI PERUT – RSUP Dr. Kariadi</h1>",
             unsafe_allow_html=True,
@@ -251,17 +249,18 @@ with st.expander(
         if st.checkbox(q, key=f"egd_alarm_{i}"):
             egd_alarm_sel.append(q)
 
-st.markdown(
-    """
-    <p style="font-size:0.95rem; color:#455a64; margin-top:0.5rem;">
-    <b>Istilah penting:</b><br/>
-    • <b>Dispepsia</b>: rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas.<br/>
-    • <b>Disfagia</b>: kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada.<br/>
-    • <b>Odynofagia</b>: nyeri saat menelan, seperti rasa perih/terbakar/menusuk ketika makanan atau minuman lewat di kerongkongan.<br/>
-    </p>
-    """,
-    unsafe_allow_html=True,
-)
+    # Istilah penting di dalam expander EGD
+    st.markdown(
+        """
+        <p style="font-size:0.95rem; color:#455a64; margin-top:0.5rem;">
+        <b>Istilah penting:</b><br/>
+        • <b>Dispepsia</b>: rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas.<br/>
+        • <b>Disfagia</b>: kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada.<br/>
+        • <b>Odynofagia</b>: nyeri saat menelan, seperti rasa perih/terbakar/menusuk ketika makanan atau minuman lewat di kerongkongan.<br/>
+        </p>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ------------------ PERTANYAAN KOLO ------------------
 ALARM_COLO = [
@@ -308,16 +307,19 @@ with st.expander(
             if st.checkbox(q, key=f"colo_other_{i}"):
                 colo_other_sel.append(q)
 
-st.markdown(
-    """
-    <p style="font-size:0.95rem; color:#455a64; margin-top:0.5rem;">
-    <b>Keterangan:</b><br/>
-    • <b>IBD (Inflammatory Bowel Disease)</b> adalah peradangan kronik pada usus, misalnya kolitis ulseratif atau penyakit Crohn, yang meningkatkan risiko kanker kolorektal.<br/>
-    • <b>CRC (Colorectal Cancer)</b> adalah kanker yang berasal dari usus besar atau rektum. Banyak kasus berawal dari polip yang tumbuh perlahan dan dapat dideteksi serta diangkat dengan kolonoskopi.<br/>
-    </p>
-    """,
-    unsafe_allow_html=True,
-)
+    # Keterangan IBD & CRC di dalam expander kolonoskopi
+    st.markdown(
+        """
+        <p style="font-size:0.95rem; color:#455a64; margin-top:0.5rem;">
+        <b>Keterangan:</b><br/>
+        • <b>IBD (Inflammatory Bowel Disease)</b> adalah peradangan kronik pada usus, misalnya kolitis ulseratif atau penyakit Crohn,
+          yang meningkatkan risiko kanker kolorektal.<br/>
+        • <b>CRC (Colorectal Cancer)</b> adalah kanker yang berasal dari usus besar atau rektum. Banyak kasus berawal dari polip yang tumbuh perlahan
+          dan dapat dideteksi serta diangkat dengan kolonoskopi.<br/>
+        </p>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ------------------ APCS: Skor Risiko Kanker Kolorektal ------------------
 st.markdown("---")
@@ -529,7 +531,8 @@ def build_pdf_letterhead(
     elems += [
         Spacer(1, 6),
         Table(
-            [[""]], colWidths=[555],
+            [[""]],
+            colWidths=[555],
             style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         ),
         Spacer(1, 10),
