@@ -262,8 +262,8 @@ st.markdown(
 **Keterangan istilah penting:**
    - **IBD (Inflammatory Bowel Disease)** adalah **peradangan kronik pada usus**, misalnya *kolitis ulseratif* dan *penyakit Crohn*. Gejalanya bisa berupa diare kronik, diare berdarah, nyeri perut berulang, berat badan turun, dan dapat meningkatkan risiko kanker kolorektal bila berlangsung lama.
 
-   - **CRC (Colorectal Cancer / kanker kolorektal)** adalah kanker yang tumbuh di **usus besar (kolon)** dan **rektum**. Seringkali berawal dari **polip adenoma** yang tumbuh pelan-pelan dan lama-kelamaan berubah ganas. Faktor risiko antara lain usia ≥50 tahun, riwayat polip, riwayat keluarga dengan CRC, dan IBD kronik.
-
+   - **CRC (Colorectal Cancer / kanker kolorektal)** adalah kanker yang tumbuh di **usus besar (kolon)** dan **rektum**. Seringkali berawal dari **polip adenoma** yang tumbuh pelan-pelan.
+    
    - **Polip adenoma** adalah benjolan kecil jinak di dinding usus besar. Polip jenis ini dianggap sebagai “lesi pra-kanker”, sehingga bila ditemukan biasanya dianjurkan untuk diangkat saat kolonoskopi.
 
    Penjelasan ini membantu memahami mengapa beberapa faktor di atas meningkatkan risiko kanker kolorektal dan mengapa kolonoskopi mungkin diperlukan.
