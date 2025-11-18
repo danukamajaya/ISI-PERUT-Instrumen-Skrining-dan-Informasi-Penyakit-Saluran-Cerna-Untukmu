@@ -54,12 +54,14 @@ CUSTOM_CSS = """
   color: #1c1c1c;
 }
 
-/* sedikit besarkan font umum */
-body, .stApp, p, li {
-  font-size: 1.05rem;
+/* Atur lebar maksimum konten + rata tengah */
+.block-container {
+  max-width: 1000px;      /* ganti 900/1100 sesuai selera */
+  padding-top: 40px;
+  padding-bottom: 2rem;
+  margin-left: auto;
+  margin-right: auto;
 }
-
-.block-container { padding-top: 40px; padding-bottom: 2rem; }
 
 h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
