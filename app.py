@@ -258,7 +258,6 @@ with st.expander(
                 colo_other_sel.append(q)
 
      st.markdown(
-        """
         **Keterangan istilah penting:**
 
         - **IBD (Inflammatory Bowel Disease)** adalah **peradangan kronik pada usus**,
@@ -278,7 +277,6 @@ with st.expander(
 
         Penjelasan ini membantu memahami mengapa beberapa faktor di atas
         meningkatkan risiko kanker kolorektal dan mengapa kolonoskopi mungkin diperlukan.
-        """,
         unsafe_allow_html=True,
 )
 
