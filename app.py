@@ -173,14 +173,30 @@ if endo_img:
         unsafe_allow_html=True,
     )
 
+# ===== LINK E-BOOK EDUKASI =====
 st.markdown(
     """
-    <p style='text-align:center; margin-top:0.5rem;'>
-      📘 Untuk informasi lengkap mengenai prosedur teropong saluran cerna,
-      Anda dapat membaca e-book edukasi berikut:
-      <a href="https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/f0KVVnM6SNysvTmFOPMOWA" target="_blank">
-      <b>E-book Pemeriksaan Endoskopi Saluran Cerna</b></a>.
-    </p>
+    <div style='margin-top:14px; text-align:center;'>
+      <div style='display:inline-block; padding:1rem 1.2rem;
+                  border-radius:14px; background-color:#ffffffcc;
+                  box-shadow:0 4px 12px rgba(0,0,0,.06);
+                  border:1px solid #b2dfdb; max-width:780px;'>
+        <p style='margin:0 0 .5rem 0; font-weight:600; color:#006064;'>
+          Ingin tahu lebih jauh tentang pemeriksaan teropong saluran cerna?
+        </p>
+        <p style='margin:0 0 .75rem 0; font-size:.95rem; color:#455a64;'>
+          Baca e-book edukasi pasien yang berisi penjelasan langkah pemeriksaan,
+          persiapan sebelum tindakan, serta hal-hal penting yang perlu Anda ketahui.
+        </p>
+        <a href="https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/f0KVVnM6SNysvTmFOPMOWA"
+           target="_blank" rel="noopener noreferrer"
+           style="display:inline-block; padding:.55rem 1.1rem;
+                  background:#00b3ad; color:#ffffff; border-radius:999px;
+                  text-decoration:none; font-weight:600;">
+          📖 Buka e-book edukasi ISI PERUT
+        </a>
+      </div>
+    </div>
     """,
     unsafe_allow_html=True,
 )
