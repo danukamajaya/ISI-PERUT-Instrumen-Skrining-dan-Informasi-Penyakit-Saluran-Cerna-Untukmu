@@ -193,12 +193,13 @@ st.markdown("---")
 
 # ------------------ PERTANYAAN EGD (Alarm Dyspepsia) ------------------
 ALARM_EGD = [
-    "Usia saya **≥50 tahun** dengan keluhan dispepsia",
+    "Usia saya **≥50 tahun** dengan keluhan rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang,
+          atau nyeri/panas di perut bagian atas (dispepsia)",
     "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**",
     "Berat badan saya **turun tanpa sebab jelas**",
     "Saya mengalami **perdarahan saluran cerna** atau diberitahu ada **anemia defisiensi besi**",
-    "Saya **sulit menelan (disfagia)**",
-    "Saya **nyeri saat menelan (odynofagia)**",
+    "Saya **kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada(disfagia)**",
+    "Saya **nyeri saat menelan, rasa perih/terbakar/menusuk di dada atau kerongkongan saat makanan/minuman lewat (odynofagia)**",
     "Saya mengalami **muntah menetap / persisten**",
     "Pemeriksaan penunjang menunjukkan **kelainan organik** pada saluran cerna atas",
 ]
