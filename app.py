@@ -259,7 +259,6 @@ with st.expander(
                 
 # ------------------ Keterangan istilah penting ------------------
 st.markdown(
-**Keterangan istilah penting:**
    - **IBD (Inflammatory Bowel Disease)** adalah **peradangan kronik pada usus**, misalnya *kolitis ulseratif* dan *penyakit Crohn*. Gejalanya bisa berupa diare kronik, diare berdarah, nyeri perut berulang, berat badan turun, dan dapat meningkatkan risiko kanker kolorektal bila berlangsung lama.
 
    - **CRC (Colorectal Cancer / kanker kolorektal)** adalah kanker yang tumbuh di **usus besar (kolon)** dan **rektum**. Seringkali berawal dari **polip adenoma** yang tumbuh pelan-pelan.
