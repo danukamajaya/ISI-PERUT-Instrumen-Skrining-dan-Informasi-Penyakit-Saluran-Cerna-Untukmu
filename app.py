@@ -197,10 +197,9 @@ ALARM_EGD = [
     "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**",
     "Berat badan saya **turun tanpa sebab jelas**",
     "Saya mengalami **perdarahan saluran cerna** atau diberitahu ada **anemia defisiensi besi**",
-    "Saya **kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada(disfagia)**",
+    "Saya **kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada (disfagia)**",
     "Saya **nyeri saat menelan, rasa perih/terbakar/menusuk di dada atau kerongkongan saat makanan/minuman lewat (odynofagia)**",
     "Saya mengalami **muntah menetap / persisten**",
-    "Pemeriksaan penunjang menunjukkan **kelainan organik** pada saluran cerna atas",
 ]
 
 with st.expander(
