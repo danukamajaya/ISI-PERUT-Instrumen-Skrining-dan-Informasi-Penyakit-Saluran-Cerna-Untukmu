@@ -269,10 +269,7 @@ with st.expander(
         ### ℹ️ Keterangan Istilah Penting
 
         **• IBD (Inflammatory Bowel Disease)**  
-        Kelompok penyakit peradangan kronik pada usus, terutama usus besar, yang meliputi:
-        - **Kolitis ulseratif**  
-        - **Penyakit Crohn**  
-
+        Kelompok penyakit peradangan kronik pada usus, terutama usus besar
         Gejala yang sering muncul antara lain diare kronik, diare berdarah, nyeri perut berkepanjangan,
         dan berat badan turun. IBD yang berlangsung lama dapat meningkatkan risiko **kanker kolorektal**.
 
@@ -284,11 +281,6 @@ with st.expander(
         Benjolan kecil di dinding usus yang awalnya jinak, tetapi termasuk lesi “pra-kanker”.
         Polip biasanya tidak bergejala dan hanya terlihat saat kolonoskopi.  
         Jika ditemukan, polip biasanya akan diangkat untuk mencegah menjadi kanker.
-
-        **• Tes darah samar feses (FOBT/iFOBT)**  
-        Pemeriksaan tinja untuk mendeteksi darah dalam jumlah sangat kecil yang tidak terlihat kasat mata.
-        Hasil **positif** tidak selalu berarti kanker, tetapi menunjukkan perlunya evaluasi lebih lanjut,
-        misalnya dengan kolonoskopi sesuai anjuran dokter.
 
         Penjelasan ini membantu memahami mengapa beberapa faktor di atas
         membuat kolonoskopi atau skrining lebih lanjut menjadi penting.
