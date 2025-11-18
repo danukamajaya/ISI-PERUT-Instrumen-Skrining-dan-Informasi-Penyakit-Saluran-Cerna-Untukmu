@@ -77,13 +77,13 @@ h2, h3 { font-weight:700; }
 /* ====== Ilustrasi ====== */
 .illustrations {
   display: flex;
-  justify-content: center;   /* rata tengah */
+  justify-content: center;
   align-items: center;
   margin-top: 10px;
 }
 .illustration { text-align: center; }
 .illustration img {
-  max-width: 800px;   /* gambar tidak terlalu besar di desktop */
+  max-width: 800px;
   width: 100%;
   height: auto;
   border-radius: 10px;
@@ -212,7 +212,7 @@ with st.expander(
         if st.checkbox(q, key=f"egd_alarm_{i}"):
             egd_alarm_sel.append(q)
 
-# ------------------ PERTANYAAN KOLO (seperti sebelumnya) ------------------
+# ------------------ PERTANYAAN KOLO (alarm + risiko + elektif) ------------------
 ALARM_COLO = [
     "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**",
     "Saya **anemia defisiensi besi** atau tampak pucat/lemas",
@@ -220,6 +220,7 @@ ALARM_COLO = [
     "Terjadi **perubahan pola BAB progresif** (>4–6 minggu) disertai darah",
     "Nyeri perut berat menetap, **diare berdarah/demam** (curiga kolitis/IBD berat)",
 ]
+
 RISK_COLO = [
     "Usia **≥50 tahun** dengan keluhan saluran cerna bawah",
     "Ada **keluarga dekat** dengan **kanker kolorektal/polip adenoma**",
@@ -227,6 +228,7 @@ RISK_COLO = [
     "Riwayat **IBD** (kolitis ulseratif/Crohn) — evaluasi/monitoring",
     "Riwayat **polip/operasi CRC** — perlu **surveilans** berkala",
 ]
+
 OTHER_COLO = [
     "**Perubahan kebiasaan BAB** >4–6 minggu tanpa tanda bahaya",
     "**Konstipasi kronik** tidak membaik dengan pengobatan awal",
@@ -241,22 +243,59 @@ with st.expander(
 ):
     c1, c2, c3 = st.columns(3)
     colo_alarm_sel, colo_risk_sel, colo_other_sel = [], [], []
+
     with c1:
         st.subheader("🚨 Tanda Bahaya")
         for i, q in enumerate(ALARM_COLO):
             if st.checkbox(q, key=f"colo_alarm_{i}"):
                 colo_alarm_sel.append(q)
+
     with c2:
         st.subheader("⚠️ Faktor Risiko")
         for i, q in enumerate(RISK_COLO):
             if st.checkbox(q, key=f"colo_risk_{i}"):
                 colo_risk_sel.append(q)
+
     with c3:
         st.subheader("🩹 Indikasi Elektif")
         for i, q in enumerate(OTHER_COLO):
             if st.checkbox(q, key=f"colo_other_{i}"):
                 colo_other_sel.append(q)
-                
+
+    # Keterangan istilah IBD, CRC, polip, dan tes darah samar
+    st.markdown(
+        """
+        ---
+        ### ℹ️ Keterangan Istilah Penting
+
+        **• IBD (Inflammatory Bowel Disease)**  
+        Kelompok penyakit peradangan kronik pada usus, terutama usus besar, yang meliputi:
+        - **Kolitis ulseratif**  
+        - **Penyakit Crohn**  
+
+        Gejala yang sering muncul antara lain diare kronik, diare berdarah, nyeri perut berkepanjangan,
+        dan berat badan turun. IBD yang berlangsung lama dapat meningkatkan risiko **kanker kolorektal**.
+
+        **• CRC (Colorectal Cancer)**  
+        Kanker yang berasal dari usus besar dan rektum. Seringkali berkembang pelan-pelan dari
+        **polip adenoma** (benjolan jinak) yang kemudian berubah menjadi ganas bila tidak terdeteksi dan diangkat.
+
+        **• Polip adenoma**  
+        Benjolan kecil di dinding usus yang awalnya jinak, tetapi termasuk lesi “pra-kanker”.
+        Polip biasanya tidak bergejala dan hanya terlihat saat kolonoskopi.  
+        Jika ditemukan, polip biasanya akan diangkat untuk mencegah menjadi kanker.
+
+        **• Tes darah samar feses (FOBT/iFOBT)**  
+        Pemeriksaan tinja untuk mendeteksi darah dalam jumlah sangat kecil yang tidak terlihat kasat mata.
+        Hasil **positif** tidak selalu berarti kanker, tetapi menunjukkan perlunya evaluasi lebih lanjut,
+        misalnya dengan kolonoskopi sesuai anjuran dokter.
+
+        Penjelasan ini membantu memahami mengapa beberapa faktor di atas
+        membuat kolonoskopi atau skrining lebih lanjut menjadi penting.
+        """,
+        unsafe_allow_html=True,
+    )
+
 # ------------------ APCS: Skor Risiko Kanker Kolorektal ------------------
 st.markdown("---")
 st.markdown("### 📊 Skrining Risiko Kanker Kolorektal (APCS)")
