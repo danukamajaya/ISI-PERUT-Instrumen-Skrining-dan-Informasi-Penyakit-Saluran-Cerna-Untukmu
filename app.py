@@ -576,7 +576,7 @@ def build_pdf_letterhead(
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=120, height=120)
+        Image(logo_isi_path, width=140, height=140)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
@@ -726,7 +726,7 @@ def build_pdf_apcs(
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=130, height=130)
+        Image(logo_isi_path, width=140, height=140)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
