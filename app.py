@@ -43,6 +43,9 @@ logo_kariadi = pick_first_existing(["logo_kariadi.png"])
 logo_isi = pick_first_existing(["logo_isi_perut.png"])
 endo_img = pick_first_existing(["ilustrasi_endoskopi.png", "ilustrasi_endoskopi.jpg"])
 
+# Link e-book
+EBOOK_URL = "https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/f0KVVnM6SNysvTmFOPMOWA"
+
 # ------------------ CSS ------------------
 CUSTOM_CSS = """
 <style>
@@ -56,7 +59,7 @@ CUSTOM_CSS = """
 
 /* Atur lebar maksimum konten + rata tengah */
 .block-container {
-  max-width: 1000px;      /* ganti 900/1100 sesuai selera */
+  max-width: 1000px;
   padding-top: 40px;
   padding-bottom: 2rem;
   margin-left: auto;
@@ -92,6 +95,38 @@ h2, h3 { font-weight:700; }
   box-shadow: 0 4px 10px rgba(0,0,0,.08);
 }
 .illustration-cap { color: #5b7580; font-size: .9rem; margin-top: .5rem; }
+
+/* ====== Kartu e-book ====== */
+.ebook-card {
+  border-radius: 16px;
+  background:#ffffffdd;
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  padding: 1.1rem 1.4rem 1.3rem 1.4rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.6rem;
+  text-align:center;
+  border:1px solid #b2dfdb;
+}
+.ebook-title {
+  font-weight:700;
+  color:#00695c;
+  margin-bottom:0.3rem;
+}
+.ebook-btn {
+  display:inline-block;
+  margin-top:0.6rem;
+  padding:0.5rem 1.6rem;
+  border-radius:999px;
+  background:#00b3ad;
+  color:#ffffff !important;
+  text-decoration:none;
+  font-weight:600;
+  font-size:0.95rem;
+  box-shadow:0 3px 8px rgba(0,0,0,.12);
+}
+.ebook-btn:hover {
+  background:#009188;
+}
 
 /* ====== Kartu hasil ====== */
 .result-card {
@@ -164,6 +199,20 @@ if endo_img:
         unsafe_allow_html=True,
     )
 
+# ------------------ KARTU E-BOOK ------------------
+st.markdown(
+    f"""
+    <div class='ebook-card'>
+      <div class='ebook-title'>Ingin tahu lebih jauh tentang pemeriksaan teropong saluran cerna?</div>
+      <div style='margin-bottom:0.4rem;'>
+        Baca e-book edukasi pasien yang berisi penjelasan langkah pemeriksaan, persiapan sebelum tindakan,
+        serta hal-hal penting yang perlu Anda ketahui.
+      </div>
+      <a href="{EBOOK_URL}" target="_blank" class="ebook-btn">📘 Buka e-book edukasi ISI PERUT</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.markdown("---")
 
@@ -393,7 +442,6 @@ with st.expander(
 st.markdown("---")
 st.markdown("### 📊 Skrining Risiko Kanker Kolorektal (APCS)")
 
-# Penentuan skor usia berdasarkan APCS
 if age < 45:
     age_score = 0
 elif 45 <= age <= 69:
@@ -401,10 +449,8 @@ elif 45 <= age <= 69:
 else:  # age >= 70
     age_score = 3
 
-# Skor jenis kelamin
 sex_score = 1 if sex == "Laki-laki" else 0
 
-# Riwayat keluarga CRC derajat pertama
 fhx = st.radio(
     "Riwayat keluarga kanker kolorektal derajat pertama (Ayah/Ibu/Kakak/Adik kandung)",
     ["Tidak ada", "Ada"],
@@ -412,7 +458,6 @@ fhx = st.radio(
 )
 fhx_score = 0 if fhx == "Tidak ada" else 2
 
-# Riwayat merokok
 smoke = st.radio(
     "Riwayat merokok",
     ["Tidak pernah merokok", "Saat ini merokok atau dulu pernah merokok"],
@@ -475,12 +520,10 @@ def verdict(alarm, risk, other, organ):
             "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul gejala yang perlu dievaluasi lebih lanjut, segera konsultasi ke dokter.",
         )
 
-# EGD: hanya menggunakan gejala yang perlu dievaluasi
 v_egd, b_egd, a_egd = verdict(
     egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)"
 )
 
-# Kolonoskopi
 v_colo, b_colo, a_colo = verdict(
     colo_alarm_sel,
     colo_risk_sel,
@@ -488,7 +531,6 @@ v_colo, b_colo, a_colo = verdict(
     "kolonoskopi (saluran cerna bawah)",
 )
 
-# Pengaruh APCS terhadap rekomendasi kolonoskopi
 if score_apcs >= 4:
     v_colo = (
         "🟠 Risiko tinggi berdasarkan skor APCS — perlu evaluasi lebih lanjut untuk kanker kolorektal"
@@ -570,7 +612,6 @@ def build_pdf_letterhead(
 
     elems = []
 
-    # ===== HEADER KOP SURAT (teks di tengah, logo ISI PERUT lebih besar) =====
     left_img = (
         Image(logo_rs_path, width=130, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
@@ -619,14 +660,12 @@ def build_pdf_letterhead(
         Spacer(1, 10),
     ]
 
-    # Judul
     elems.append(
         Paragraph("HASIL SKRINING ENDOSKOPI SALURAN CERNA", styles["H1C"])
     )
     elems.append(Paragraph("(EGD & Kolonoskopi)", styles["SmallGray"]))
     elems.append(Spacer(1, 6))
 
-    # Identitas
     ident = [
         Paragraph(f"<b>Tanggal:</b> {today}", styles["Label"]),
         Paragraph(f"<b>Nama:</b> {name if name else '-'}", styles["Label"]),
@@ -636,7 +675,6 @@ def build_pdf_letterhead(
     elems.extend(ident)
     elems.append(Spacer(1, 10))
 
-    # Seksi EGD
     elems.append(Paragraph("<b>1) Saluran Cerna Atas (EGD)</b>", styles["Bold"]))
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
     elems.append(Paragraph(a_egd, styles["Label"]))
@@ -655,7 +693,6 @@ def build_pdf_letterhead(
 
     elems.append(Spacer(1, 8))
 
-    # Seksi Kolonoskopi
     elems.append(Paragraph("<b>2) Saluran Cerna Bawah (Kolonoskopi)</b>", styles["Bold"]))
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_colo}", styles["Label"]))
     elems.append(Paragraph(a_colo, styles["Label"]))
@@ -666,7 +703,6 @@ def build_pdf_letterhead(
             elems.append(Paragraph(f"• {r}", styles["Label"]))
     elems.append(Spacer(1, 12))
 
-    # Catatan
     elems.append(
         Paragraph(
             "Hasil ini bersifat edukatif dan tidak menggantikan penilaian dokter. "
@@ -720,7 +756,6 @@ def build_pdf_apcs(
 
     elems = []
 
-    # HEADER LOGO DENGAN TEKS DI TENGAH
     left_img = (
         Image(logo_rs_path, width=130, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
@@ -760,7 +795,6 @@ def build_pdf_apcs(
     elems.append(header_tbl)
     elems.append(Spacer(1, 8))
 
-    # Garis bawah
     elems.append(
         Table(
             [[""]],
@@ -770,7 +804,6 @@ def build_pdf_apcs(
     )
     elems.append(Spacer(1, 10))
 
-    # JUDUL SURAT
     elems.append(
         Paragraph("HASIL SKRINING RISIKO KANKER KOLOREKTAL", styles["Judul"])
     )
@@ -779,14 +812,12 @@ def build_pdf_apcs(
     )
     elems.append(Spacer(1, 12))
 
-    # Identitas
     elems.append(Paragraph(f"<b>Tanggal:</b> {today}", styles["Label"]))
     elems.append(Paragraph(f"<b>Nama:</b> {name}", styles["Label"]))
     elems.append(Paragraph(f"<b>Usia:</b> {age} tahun", styles["Label"]))
     elems.append(Paragraph(f"<b>Jenis Kelamin:</b> {sex}", styles["Label"]))
     elems.append(Spacer(1, 12))
 
-    # Hasil APCS
     elems.append(Paragraph("<b>Hasil Perhitungan APCS:</b>", styles["Label"]))
     elems.append(
         Paragraph(
@@ -798,7 +829,6 @@ def build_pdf_apcs(
     elems.append(Paragraph(pesan_apcs, styles["Label"]))
     elems.append(Spacer(1, 12))
 
-    # Catatan edukasi
     elems.append(
         Paragraph(
             "Catatan: Hasil ini merupakan skrining awal berdasarkan formulir APCS. "
@@ -812,7 +842,6 @@ def build_pdf_apcs(
     return buf.getvalue()
 
 
-# Kumpulkan alasan yang dipilih untuk dicetak di PDF
 r_egd_all = egd_alarm_sel
 r_colo_all = colo_alarm_sel + colo_risk_sel + colo_other_sel
 
