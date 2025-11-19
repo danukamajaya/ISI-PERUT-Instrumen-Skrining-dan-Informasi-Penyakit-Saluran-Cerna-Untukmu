@@ -164,6 +164,21 @@ if endo_img:
         unsafe_allow_html=True,
     )
 
+# ------------------ E-BOOK LINK (kartu + tombol di dalamnya) ------------------
+st.markdown(
+    f"""
+    <div class='ebook-card'>
+      <div class='ebook-title'>Ingin tahu lebih jauh tentang pemeriksaan teropong saluran cerna?</div>
+      <div style='margin-bottom:0.4rem;'>
+        Baca e-book edukasi pasien yang berisi penjelasan langkah pemeriksaan, persiapan sebelum tindakan,
+        serta hal-hal penting yang perlu Anda ketahui.
+      </div>
+      <a href="{EBOOK_URL}" target="_blank" class="ebook-btn">📘 Buka e-book edukasi ISI PERUT</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.markdown("---")
 
 # ------------------ DESKRIPSI SKRINING ------------------
