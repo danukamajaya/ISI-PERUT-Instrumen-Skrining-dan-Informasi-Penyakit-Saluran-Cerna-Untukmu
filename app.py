@@ -39,8 +39,13 @@ def pick_first_existing(paths):
     return None
 
 # ------------------ ASSET PATHS ------------------
+# logo header gabungan
+logo_header = pick_first_existing(["logo_header.png", "Logo_Header.png"])
+
+# (opsional) tetap boleh disimpan untuk keperluan PDF, kalau masih dipakai
 logo_kariadi = pick_first_existing(["logo_kariadi.png"])
 logo_isi = pick_first_existing(["logo_isi_perut.png"])
+
 endo_img = pick_first_existing(["ilustrasi_endoskopi.png", "ilustrasi_endoskopi.jpg"])
 
 # Link e-book
@@ -161,17 +166,10 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ------------------ HEADER (2 logo sejajar) ------------------
 with st.container():
-    pad_left, col_logo1, col_logo2, pad_right = st.columns([0.3, 1, 1, 0.3])
-
-    with col_logo1:
-        if logo_kariadi:
-            # spacer agar logo RS Kariadi tampak sedikit lebih turun
-            st.markdown("<div style='height:80px'></div>", unsafe_allow_html=True)
-            st.image(logo_kariadi, width=500)
-
-    with col_logo2:
-        if logo_isi:
-            st.image(logo_isi, width=350)
+    if logo_header:
+        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
+        st.image(logo_header, width=700)  # bisa diubah 600–750 sesuai selera
+        st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown(
         """
