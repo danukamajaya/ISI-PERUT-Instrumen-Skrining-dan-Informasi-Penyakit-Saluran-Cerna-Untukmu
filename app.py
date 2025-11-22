@@ -42,7 +42,7 @@ def pick_first_existing(paths):
 # logo header gabungan
 logo_header = pick_first_existing(["logo_header.png", "Logo_Header.png"])
 
-# (opsional) tetap boleh disimpan untuk keperluan PDF, kalau masih dipakai
+# (opsional) tetap dipakai untuk keperluan PDF
 logo_kariadi = pick_first_existing(["logo_kariadi.png"])
 logo_isi = pick_first_existing(["logo_isi_perut.png"])
 
@@ -91,6 +91,7 @@ CUSTOM_CSS = """
     max-width: 90vw;
   }
 }
+
 h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
@@ -184,11 +185,10 @@ h2, h3 { font-weight:700; }
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-# ------------------ HEADER (2 logo sejajar) ------------------
+# ------------------ HEADER ------------------
 with st.container():
     if logo_header:
         st.markdown("<div class='header-logo'>", unsafe_allow_html=True)
-        # gunakan lebar mengikuti container, CSS yang batasi max-width
         st.image(logo_header, use_column_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -248,7 +248,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ------------------ DATA PRIBADI (bukan expander) ------------------
+# ------------------ DATA PRIBADI ------------------
 st.markdown("### 🧑‍⚕️ Data Pribadi")
 
 name = st.text_input("Nama lengkap")
@@ -262,7 +262,7 @@ today = datetime.today().strftime("%d %b %Y")
 
 st.markdown("---")
 
-# ------------------ PERTANYAAN EGD (Gejala dyspepsia) ------------------
+# ------------------ PERTANYAAN EGD ------------------
 ALARM_EGD = [
     "Usia saya **≥50 tahun** dengan keluhan rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas (dispepsia).",
     "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**.",
@@ -296,7 +296,7 @@ with st.expander(
         unsafe_allow_html=False,
     )
 
-# ------------------ GERD-Q: Skrining GERD ------------------
+# ------------------ GERD-Q ------------------
 GERDQ_OPTIONS = ["0 hari", "1 hari", "2–3 hari", "4–7 hari"]
 
 with st.expander(
@@ -344,7 +344,6 @@ with st.expander(
         key="gerdq6",
     )
 
-    # Skoring GERD-Q: 1–2 positif (0,1,2,3); 3–4 terbalik (3,2,1,0); 5–6 positif (0,1,2,3)
     def score_pos(ans: str) -> int:
         return GERDQ_OPTIONS.index(ans)
 
@@ -457,7 +456,7 @@ with st.expander(
         unsafe_allow_html=False,
     )
 
-# ------------------ APCS: Skor Risiko Kanker Kolorektal ------------------
+# ------------------ APCS ------------------
 st.markdown("---")
 st.markdown("### 📊 Skrining Risiko Kanker Kolorektal (APCS)")
 
@@ -539,16 +538,20 @@ def verdict(alarm, risk, other, organ):
             "Lanjutkan pemantauan dan pengobatan rutin. Bila keluhan menetap >4–6 minggu atau muncul gejala yang perlu dievaluasi lebih lanjut, segera konsultasi ke dokter.",
         )
 
+# Verdikt murni dari gejala (EGD + Kolonoskopi) — dipakai juga untuk PDF
 v_egd, b_egd, a_egd = verdict(
     egd_alarm_sel, [], [], "endoskopi saluran cerna atas (EGD)"
 )
 
-v_colo, b_colo, a_colo = verdict(
+v_colo_pdf, b_colo_pdf, a_colo_pdf = verdict(
     colo_alarm_sel,
     colo_risk_sel,
     colo_other_sel,
     "kolonoskopi (saluran cerna bawah)",
 )
+
+# Verdikt yang ditampilkan di layar (boleh dimodifikasi oleh APCS)
+v_colo, b_colo, a_colo = v_colo_pdf, b_colo_pdf, a_colo_pdf
 
 if score_apcs >= 4:
     v_colo = (
@@ -876,8 +879,8 @@ if HAS_RL:
         a_egd,
         r_egd_all,
         gerd_q_summary,
-        v_colo,
-        a_colo,
+        v_colo_pdf,   # gunakan verdikt murni gejala untuk PDF
+        a_colo_pdf,
         r_colo_all,
         logo_kariadi,
         logo_isi,
