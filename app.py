@@ -51,6 +51,9 @@ endo_img = pick_first_existing(["ilustrasi_endoskopi.png", "ilustrasi_endoskopi.
 # Link e-book
 EBOOK_URL = "https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/f0KVVnM6SNysvTmFOPMOWA"
 
+# Link booklet paket harga endoskopi
+PRICE_BOOK_URL = "https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/Q2RhvGlQSwmp7SePS9FLJw"
+
 # ------------------ CSS ------------------
 CUSTOM_CSS = """
 <style>
@@ -581,6 +584,20 @@ with colB:
         f'<div class="result-card"><span class="{b_colo}">{v_colo}</span><br/>{a_colo}</div>',
         unsafe_allow_html=True,
     )
+
+# ---------- KARTU INFORMASI PAKET HARGA ----------
+st.markdown(
+    f"""
+    <div class='ebook-card'>
+      <div class='ebook-title'>Ingin tahu informasi paket harga endoskopi?</div>
+      <div style='margin-bottom:0.4rem;'>
+        Lihat booklet paket harga pemeriksaan endoskopi saluran cerna di RSUP Dr. Kariadi Semarang.
+      </div>
+      <a href="{PRICE_BOOK_URL}" target="_blank" class="ebook-btn">💰 Buka booklet paket harga</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ------------------ PDF EXPORT (kop surat RS Kariadi) ------------------
 def build_pdf_letterhead(
