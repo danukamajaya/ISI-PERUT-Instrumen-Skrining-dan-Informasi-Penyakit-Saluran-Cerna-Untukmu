@@ -71,6 +71,26 @@ CUSTOM_CSS = """
   margin-right: auto;
 }
 
+/* ====== Header logo gabungan ====== */
+.header-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.header-logo img {
+  max-width: 700px;   /* boleh disesuaikan 600–750 */
+  width: 100%;
+  height: auto;
+}
+
+/* di layar kecil, biar tidak terlalu besar */
+@media (max-width: 768px){
+  .header-logo img {
+    max-width: 90vw;
+  }
+}
 h1, h2, h3 { color:#007C80; }
 h1 { font-weight:800; }
 h2, h3 { font-weight:700; }
@@ -167,8 +187,9 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 # ------------------ HEADER (2 logo sejajar) ------------------
 with st.container():
     if logo_header:
-        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
-        st.image(logo_header, width=700)  # bisa diubah 600–750 sesuai selera
+        st.markdown("<div class='header-logo'>", unsafe_allow_html=True)
+        # gunakan lebar mengikuti container, CSS yang batasi max-width
+        st.image(logo_header, use_column_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown(
