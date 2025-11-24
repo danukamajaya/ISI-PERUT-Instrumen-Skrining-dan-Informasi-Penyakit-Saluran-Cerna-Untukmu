@@ -125,7 +125,7 @@ h2, h3 { font-weight:700; }
 }
 .illustration-cap { color: #5b7580; font-size: .9rem; margin-top: .5rem; }
 
-/* ====== Kartu e-book ====== */
+/* ====== Kartu e-book / info ====== */
 .ebook-card {
   border-radius: 16px;
   background:#ffffffdd;
@@ -267,6 +267,7 @@ st.markdown("---")
 
 # ------------------ GERD-Q ------------------
 GERDQ_OPTIONS = ["0 hari", "1 hari", "2–3 hari", "4–7 hari"]
+gerd_q_summary = ""  # akan terisi bila formulir diisi
 
 with st.expander(
     "Apakah Saya mengidap GERD (Gastroesophageal Reflux Disease)?",
@@ -360,7 +361,6 @@ with st.expander(
         unsafe_allow_html=True,
     )
 
-
 # ------------------ PERTANYAAN EGD ------------------
 ALARM_EGD = [
     "Usia saya **≥50 tahun** dengan keluhan rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas (dispepsia).",
@@ -373,8 +373,6 @@ ALARM_EGD = [
 ]
 
 egd_alarm_sel = []
-gerd_q_score = 0
-gerd_q_summary = ""
 
 with st.expander(
     "Apakah GERD Saya perlu teropong saluran cerna atas (EGD)?",
@@ -394,7 +392,6 @@ with st.expander(
         """,
         unsafe_allow_html=False,
     )
-
 
 # ------------------ PERTANYAAN KOLO ------------------
 ALARM_COLO = [
@@ -617,7 +614,12 @@ def build_pdf_letterhead(
     logo_rs_path: str | None,
     logo_isi_path: str | None,
 ) -> bytes:
-    """Bangun PDF hasil skrining endoskopi (EGD & Kolonoskopi) + ringkasan GERD-Q."""
+    """
+    Bangun PDF hasil skrining:
+    1) Hasil skrining GERD (GERD-Q)
+    2) Kebutuhan EGD
+    3) Kebutuhan kolonoskopi
+    """
     buf = BytesIO()
     doc = SimpleDocTemplate(
         buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28
@@ -702,9 +704,9 @@ def build_pdf_letterhead(
     ]
 
     elems.append(
-        Paragraph("HASIL SKRINING ENDOSKOPI SALURAN CERNA", styles["H1C"])
+        Paragraph("HASIL SKRINING SALURAN CERNA", styles["H1C"])
     )
-    elems.append(Paragraph("(EGD & Kolonoskopi)", styles["SmallGray"]))
+    elems.append(Paragraph("(GERD, kebutuhan EGD, dan kolonoskopi)", styles["SmallGray"]))
     elems.append(Spacer(1, 6))
 
     ident = [
@@ -716,16 +718,23 @@ def build_pdf_letterhead(
     elems.extend(ident)
     elems.append(Spacer(1, 10))
 
+    # 1) Hasil skrining GERD (GERD-Q)
+    elems.append(Paragraph("<b>1) Hasil Skrining GERD (GERD-Q)</b>", styles["Bold"]))
     if gerd_q_summary:
-        elems.append(Spacer(1, 6))
-        elems.append(
-            Paragraph("<b>Skor GERD-Q (keluhan refluks lambung):</b>", styles["Label"])
-        )
         elems.append(Paragraph(gerd_q_summary, styles["Label"]))
-
+    else:
+        elems.append(
+            Paragraph(
+                "Formulir GERD-Q belum terisi lengkap pada saat skrining.",
+                styles["Label"],
+            )
+        )
     elems.append(Spacer(1, 8))
 
-    elems.append(Paragraph("<b>1) Saluran Cerna Atas (EGD)</b>", styles["Bold"]))
+    # 2) Kebutuhan EGD
+    elems.append(
+        Paragraph("<b>2) Kebutuhan Endoskopi Saluran Cerna Atas (EGD)</b>", styles["Bold"])
+    )
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
     elems.append(Paragraph(a_egd, styles["Label"]))
     if r_egd:
@@ -734,12 +743,19 @@ def build_pdf_letterhead(
         for r in r_egd:
             elems.append(Paragraph(f"• {r}", styles["Label"]))
 
-    elems.append(Paragraph("<b>2) Saluran Cerna Bawah (Kolonoskopi)</b>", styles["Bold"]))
+    elems.append(Spacer(1, 8))
+
+    # 3) Kebutuhan kolonoskopi
+    elems.append(
+        Paragraph("<b>3) Kebutuhan Kolonoskopi (Saluran Cerna Bawah)</b>", styles["Bold"])
+    )
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_colo}", styles["Label"]))
     elems.append(Paragraph(a_colo, styles["Label"]))
     if r_colo:
         elems.append(Spacer(1, 2))
-        elems.append(Paragraph("<b>Gejala / faktor yang terdeteksi:</b>", styles["Label"]))
+        elems.append(
+            Paragraph("<b>Gejala / faktor yang terdeteksi:</b>", styles["Label"])
+        )
         for r in r_colo:
             elems.append(Paragraph(f"• {r}", styles["Label"]))
     elems.append(Spacer(1, 12))
