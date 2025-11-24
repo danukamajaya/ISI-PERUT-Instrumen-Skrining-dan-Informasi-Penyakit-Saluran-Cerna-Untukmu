@@ -814,12 +814,12 @@ def build_pdf_apcs(
     elems = []
 
     left_img = (
-        Image(logo_rs_path, width=130, height=60)
+        Image(logo_rs_path, width=140, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=130, height=130)
+        Image(logo_isi_path, width=150, height=150)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
