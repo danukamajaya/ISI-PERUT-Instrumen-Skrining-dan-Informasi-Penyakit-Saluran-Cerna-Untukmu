@@ -661,7 +661,7 @@ def build_pdf_letterhead(
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=140, height=140)
+        Image(logo_isi_path, width=160, height=160)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
@@ -678,7 +678,7 @@ def build_pdf_letterhead(
 
     header_tbl = Table(
         [[left_img, kop_text, right_img]],
-        colWidths=[135, 300, 120],
+        colWidths=[135, 300, 130],
         hAlign="CENTER",
     )
     header_tbl.setStyle(
