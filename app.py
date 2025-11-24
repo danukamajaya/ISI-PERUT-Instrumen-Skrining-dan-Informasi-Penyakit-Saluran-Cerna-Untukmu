@@ -402,19 +402,18 @@ ALARM_COLO = [
     "Nyeri perut berat menetap, **diare berdarah/demam** (curiga kolitis/IBD berat).",
 ]
 RISK_COLO = [
-    "Usia **≥50 tahun** dengan keluhan saluran cerna bawah.",
+    "Usia **≥50 tahun** dengan keluhan saluran cerna bawah (BAB cair terus menerus, sembelit, atau pola BAB berubah - ubah antara BAB cair dan sembelit.",
     "Ada **keluarga dekat** dengan **kanker kolorektal atau polip adenoma**.",
     "**Pemeriksaan tinja darah samar positif**.",
     "Riwayat **IBD** (kolitis ulseratif atau penyakit Crohn) — evaluasi/monitoring.",
     "Riwayat **polip atau operasi kanker kolorektal** — perlu **surveilans** berkala.",
 ]
 OTHER_COLO = [
-    "**Perubahan kebiasaan BAB** >4–6 minggu tanpa darah atau demam.",
-    "**Konstipasi kronik** tidak membaik dengan pengobatan awal.",
-    "**Diare kronik** >4 minggu.",
-    "Nyeri perut bawah berulang disertai perubahan BAB.",
+    "**Perubahan pola BAB (antara sembelit dan BAB cair ** >4–6 minggu tanpa darah atau demam.",
+    "**Konstipasi kronik (sembelit yang berlangsung lebih dari 3 bulan) ** tidak membaik dengan pengobatan awal.",
+    "BAB cair lebih dari **Diare kronik** >4 minggu.",
+    "Nyeri perut bawah berulang disertai perubahan pola BAB (sembelit, BAB cair).",
     "Keluar **lendir/darah sedikit** berulang dari anus.",
-    "Skrining polip/kanker kolorektal **secara elektif** sesuai usia/risiko.",
 ]
 
 colo_alarm_sel, colo_risk_sel, colo_other_sel = [], [], []
