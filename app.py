@@ -265,40 +265,6 @@ today = datetime.today().strftime("%d %b %Y")
 
 st.markdown("---")
 
-# ------------------ PERTANYAAN EGD ------------------
-ALARM_EGD = [
-    "Usia saya **≥50 tahun** dengan keluhan rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas (dispepsia).",
-    "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**.",
-    "Berat badan saya **turun tanpa sebab jelas**.",
-    "Saya mengalami **perdarahan saluran cerna** atau diberitahu ada **anemia defisiensi besi**.",
-    "Saya **kesulitan menelan**, makanan/minuman terasa tersangkut di tenggorokan atau dada (**disfagia**).",
-    "Saya **nyeri saat menelan**, seperti rasa perih/terbakar/menusuk di dada atau kerongkongan saat makanan/minuman lewat (**odynofagia**).",
-    "Saya mengalami **muntah menetap / persisten**.",
-]
-
-egd_alarm_sel = []
-gerd_q_score = 0
-gerd_q_summary = ""
-
-with st.expander(
-    "Apakah Saya perlu teropong saluran cerna atas (EGD)?",
-    expanded=False,
-):
-    st.subheader("1. Gejala yang Perlu Dievaluasi Lebih Lanjut")
-    for i, q in enumerate(ALARM_EGD):
-        if st.checkbox(q, key=f"egd_alarm_{i}"):
-            egd_alarm_sel.append(q)
-
-    st.markdown(
-        """
-        **Istilah penting:**
-        - **Dispepsia**: rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas.
-        - **Disfagia**: kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada.
-        - **Odynofagia**: nyeri saat menelan, seperti rasa perih/terbakar/menusuk ketika makanan atau minuman lewat di kerongkongan.
-        """,
-        unsafe_allow_html=False,
-    )
-
 # ------------------ GERD-Q ------------------
 GERDQ_OPTIONS = ["0 hari", "1 hari", "2–3 hari", "4–7 hari"]
 
@@ -393,6 +359,42 @@ with st.expander(
         """,
         unsafe_allow_html=True,
     )
+
+
+# ------------------ PERTANYAAN EGD ------------------
+ALARM_EGD = [
+    "Usia saya **≥50 tahun** dengan keluhan rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas (dispepsia).",
+    "Ada **riwayat keluarga derajat pertama** (orang tua / saudara kandung) dengan **keganasan saluran cerna atas**.",
+    "Berat badan saya **turun tanpa sebab jelas**.",
+    "Saya mengalami **perdarahan saluran cerna** atau diberitahu ada **anemia defisiensi besi**.",
+    "Saya **kesulitan menelan**, makanan/minuman terasa tersangkut di tenggorokan atau dada (**disfagia**).",
+    "Saya **nyeri saat menelan**, seperti rasa perih/terbakar/menusuk di dada atau kerongkongan saat makanan/minuman lewat (**odynofagia**).",
+    "Saya mengalami **muntah menetap / persisten**.",
+]
+
+egd_alarm_sel = []
+gerd_q_score = 0
+gerd_q_summary = ""
+
+with st.expander(
+    "Apakah GERD Saya perlu teropong saluran cerna atas (EGD)?",
+    expanded=False,
+):
+    st.subheader("1. Gejala yang Perlu Dievaluasi Lebih Lanjut")
+    for i, q in enumerate(ALARM_EGD):
+        if st.checkbox(q, key=f"egd_alarm_{i}"):
+            egd_alarm_sel.append(q)
+
+    st.markdown(
+        """
+        **Istilah penting:**
+        - **Dispepsia**: rasa tidak nyaman di ulu hati, perut terasa penuh/kembung, cepat kenyang, atau nyeri/panas di perut bagian atas.
+        - **Disfagia**: kesulitan menelan, makanan/minuman terasa tersangkut di tenggorokan atau dada.
+        - **Odynofagia**: nyeri saat menelan, seperti rasa perih/terbakar/menusuk ketika makanan atau minuman lewat di kerongkongan.
+        """,
+        unsafe_allow_html=False,
+    )
+
 
 # ------------------ PERTANYAAN KOLO ------------------
 ALARM_COLO = [
@@ -714,15 +716,6 @@ def build_pdf_letterhead(
     elems.extend(ident)
     elems.append(Spacer(1, 10))
 
-    elems.append(Paragraph("<b>1) Saluran Cerna Atas (EGD)</b>", styles["Bold"]))
-    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
-    elems.append(Paragraph(a_egd, styles["Label"]))
-    if r_egd:
-        elems.append(Spacer(1, 2))
-        elems.append(Paragraph("<b>Gejala yang terdeteksi:</b>", styles["Label"]))
-        for r in r_egd:
-            elems.append(Paragraph(f"• {r}", styles["Label"]))
-
     if gerd_q_summary:
         elems.append(Spacer(1, 6))
         elems.append(
@@ -731,6 +724,15 @@ def build_pdf_letterhead(
         elems.append(Paragraph(gerd_q_summary, styles["Label"]))
 
     elems.append(Spacer(1, 8))
+
+    elems.append(Paragraph("<b>1) Saluran Cerna Atas (EGD)</b>", styles["Bold"]))
+    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
+    elems.append(Paragraph(a_egd, styles["Label"]))
+    if r_egd:
+        elems.append(Spacer(1, 2))
+        elems.append(Paragraph("<b>Gejala yang terdeteksi:</b>", styles["Label"]))
+        for r in r_egd:
+            elems.append(Paragraph(f"• {r}", styles["Label"]))
 
     elems.append(Paragraph("<b>2) Saluran Cerna Bawah (Kolonoskopi)</b>", styles["Bold"]))
     elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_colo}", styles["Label"]))
