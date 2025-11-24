@@ -397,8 +397,8 @@ with st.expander(
 # ------------------ PERTANYAAN KOLO ------------------
 ALARM_COLO = [
     "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**.",
-    "Saya **anemia defisiensi besi** atau tampak pucat/lemas.",
-    "Berat badan saya **turun tanpa sebab jelas**.",
+    "Saya **anemia defisiensi besi** atau tampak pucat/lemas disertain keluhan penyebabnya belum jelas (bukan karena haid banyak, operasi, atau perdarahan lain yang sudah diketahui) terutama bila disertai keluhan saluran cerna (misalnya nyeri perut, perubahan BAB, apalagi ada darah di tinja).",
+    "Berat badan saya **turun tanpa sebab jelas** tanpa diet/olahraga khusus, terutama bila disertai keluhan saluran cerna (misalnya nyeri perut, perubahan BAB, atau darah di tinja.",
     "Terjadi **perubahan pola BAB progresif** (>4–6 minggu) disertai darah.",
     "Nyeri perut berat menetap, **diare berdarah/demam** (curiga kolitis/IBD berat).",
 ]
