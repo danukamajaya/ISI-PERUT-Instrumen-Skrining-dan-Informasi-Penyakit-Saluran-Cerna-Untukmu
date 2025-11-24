@@ -314,20 +314,28 @@ with st.expander(
         key="gerdq6",
     )
 
-    def score_pos(ans: str) -> int:
-        return GERDQ_OPTIONS.index(ans)
+    # Pemetaan skor persis seperti tabel GERD-Q:
+    # Q1,2,5,6 -> 0,1,2,3 ; Q3,4 -> 3,2,1,0
+    SCORE_MAP = {
+        "q1": [0, 1, 2, 3],
+        "q2": [0, 1, 2, 3],
+        "q3": [3, 2, 1, 0],
+        "q4": [3, 2, 1, 0],
+        "q5": [0, 1, 2, 3],
+        "q6": [0, 1, 2, 3],
+    }
 
-    def score_neg(ans: str) -> int:
+    def get_score(ans: str, key: str) -> int:
         idx = GERDQ_OPTIONS.index(ans)
-        return [3, 2, 1, 0][idx]
+        return SCORE_MAP[key][idx]
 
     gerd_q_score = (
-        score_pos(q1)
-        + score_pos(q2)
-        + score_neg(q3)
-        + score_neg(q4)
-        + score_pos(q5)
-        + score_pos(q6)
+        get_score(q1, "q1")
+        + get_score(q2, "q2")
+        + get_score(q3, "q3")
+        + get_score(q4, "q4")
+        + get_score(q5, "q5")
+        + get_score(q6, "q6")
     )
 
     if gerd_q_score >= 8:
