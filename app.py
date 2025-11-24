@@ -656,12 +656,12 @@ def build_pdf_letterhead(
     elems = []
 
     left_img = (
-        Image(logo_rs_path, width=130, height=60)
+        Image(logo_rs_path, width=140, height=60)
         if logo_rs_path and Path(logo_rs_path).exists()
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=120, height=120)
+        Image(logo_isi_path, width=140, height=140)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
