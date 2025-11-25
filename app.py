@@ -314,28 +314,23 @@ with st.expander(
         key="gerdq6",
     )
 
-    # Pemetaan skor persis seperti tabel GERD-Q:
-    # Q1,2,5,6 -> 0,1,2,3 ; Q3,4 -> 3,2,1,0
-    SCORE_MAP = {
-        "q1": [0, 1, 2, 3],
-        "q2": [0, 1, 2, 3],
-        "q3": [3, 2, 1, 0],
-        "q4": [3, 2, 1, 0],
-        "q5": [0, 1, 2, 3],
-        "q6": [0, 1, 2, 3],
-    }
+    # Skoring sesuai tabel GERD-Q:
+    # Q1,2,5,6: 0,1,2,3
+    # Q3,4 (nyeri ulu hati & mual): 3,2,1,0
+    def score_pos(ans: str) -> int:
+        return GERDQ_OPTIONS.index(ans)
 
-    def get_score(ans: str, key: str) -> int:
+    def score_neg(ans: str) -> int:
         idx = GERDQ_OPTIONS.index(ans)
-        return SCORE_MAP[key][idx]
+        return [3, 2, 1, 0][idx]
 
     gerd_q_score = (
-        get_score(q1, "q1")
-        + get_score(q2, "q2")
-        + get_score(q3, "q3")
-        + get_score(q4, "q4")
-        + get_score(q5, "q5")
-        + get_score(q6, "q6")
+        score_pos(q1)
+        + score_pos(q2)
+        + score_neg(q3)
+        + score_neg(q4)
+        + score_pos(q5)
+        + score_pos(q6)
     )
 
     if gerd_q_score >= 8:
@@ -405,21 +400,21 @@ with st.expander(
 ALARM_COLO = [
     "Saya **keluar darah segar dari dubur** sedang–berat / **menetes**.",
     "Saya **anemia defisiensi besi** atau tampak pucat/lemas disertai keluhan penyebab yang belum jelas (bukan karena haid banyak, operasi, atau perdarahan lain yang sudah diketahui) terutama bila disertai keluhan saluran cerna (misalnya nyeri perut, perubahan BAB, apalagi ada darah di tinja).",
-    "Berat badan saya **turun tanpa sebab jelas** tanpa diet/olahraga khusus, terutama bila disertai keluhan saluran cerna (misalnya nyeri perut, perubahan BAB, atau darah di tinja.",
+    "Berat badan saya **turun tanpa sebab jelas** tanpa diet/olahraga khusus, terutama bila disertai keluhan saluran cerna (misalnya nyeri perut, perubahan BAB, atau darah di tinja).",
     "Terjadi **perubahan pola BAB progresif** (>4–6 minggu) disertai darah.",
     "Nyeri perut berat menetap, **diare berdarah/demam** (curiga kolitis/IBD berat).",
 ]
 RISK_COLO = [
-    "Usia **≥50 tahun** dengan keluhan saluran cerna bawah (BAB cair terus menerus, sembelit, atau pola BAB berubah - ubah antara BAB cair dan sembelit.",
+    "Usia **≥50 tahun** dengan keluhan saluran cerna bawah (BAB cair terus menerus, sembelit, atau pola BAB berubah-ubah antara BAB cair dan sembelit).",
     "Ada **keluarga dekat** dengan **kanker kolorektal atau polip adenoma**.",
     "**Pemeriksaan tinja darah samar positif**.",
     "Riwayat **IBD** (kolitis ulseratif atau penyakit Crohn) — evaluasi/monitoring.",
     "Riwayat **polip atau operasi kanker kolorektal** — perlu **surveilans** berkala.",
 ]
 OTHER_COLO = [
-    "**Perubahan pola BAB (antara sembelit dan BAB cair ** >4–6 minggu tanpa darah atau demam.",
-    "**Konstipasi kronik (sembelit yang berlangsung lebih dari 3 bulan) ** tidak membaik dengan pengobatan awal.",
-    "BAB cair lebih dari **Diare kronik** >4 minggu.",
+    "**Perubahan pola BAB (antara sembelit dan BAB cair)** >4–6 minggu tanpa darah atau demam.",
+    "**Konstipasi kronik** (sembelit yang berlangsung lebih dari 3 bulan) tidak membaik dengan pengobatan awal.",
+    "**Diare kronik** (>4 minggu) tanpa penyebab jelas.",
     "Nyeri perut bawah berulang disertai perubahan pola BAB (sembelit, BAB cair).",
     "Keluar **lendir/darah sedikit** berulang dari anus.",
 ]
@@ -559,24 +554,8 @@ v_colo_pdf, b_colo_pdf, a_colo_pdf = verdict(
     "kolonoskopi (saluran cerna bawah)",
 )
 
-# Verdikt yang ditampilkan di layar (boleh dimodifikasi oleh APCS)
+# Verdikt yang ditampilkan di layar (TIDAK dimodifikasi oleh APCS, khusus fokus perlu kolonoskopi atau tidak)
 v_colo, b_colo, a_colo = v_colo_pdf, b_colo_pdf, a_colo_pdf
-
-if score_apcs >= 4:
-    v_colo = (
-        "🟠 Risiko tinggi berdasarkan skor APCS — perlu evaluasi lebih lanjut untuk kanker kolorektal"
-    )
-    b_colo = "badge badge-red"
-    a_colo += (
-        " Selain itu, skor APCS Anda berada pada kelompok risiko tinggi (4–7). "
-        "Disarankan berkonsultasi ke fasilitas kesehatan untuk pemeriksaan colok dubur, Tes Darah Samar Feses (iFOBT), "
-        "dan pertimbangan kolonoskopi."
-    )
-elif 2 <= score_apcs <= 3:
-    a_colo += (
-        " Skor APCS menunjukkan risiko sedang (2–3). "
-        "Diskusikan dengan dokter mengenai kebutuhan skrining iFOBT dan evaluasi lanjutan."
-    )
 
 st.subheader("📋 Ringkasan Hasil Skrining Endoskopi")
 colA, colB = st.columns(2)
