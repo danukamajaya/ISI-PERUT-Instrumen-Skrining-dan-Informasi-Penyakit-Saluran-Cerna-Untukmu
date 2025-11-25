@@ -673,7 +673,7 @@ def build_pdf_letterhead(
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("ALIGN", (1, 0), (1, 0), "CENTER"),
                 ("LEFTPADDING", (0, 0), (0, 0), 0),
-                ("RIGHTPADDING", (2, 0), (2, 0), 24),
+                ("RIGHTPADDING", (2, 0), (2, 0), 36),
             ]
         )
     )
@@ -830,7 +830,7 @@ def build_pdf_apcs(
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("ALIGN", (1, 0), (1, 0), "CENTER"),
                 ("LEFTPADDING", (0, 0), (0, 0), 0),
-                ("RIGHTPADDING", (2, 0), (2, 0), 24),
+                ("RIGHTPADDING", (2, 0), (2, 0), 36),
             ]
         )
     )
