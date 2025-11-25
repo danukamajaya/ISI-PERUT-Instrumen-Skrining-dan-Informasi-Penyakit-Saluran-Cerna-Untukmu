@@ -690,13 +690,13 @@ def build_pdf_letterhead(
 
     elems.append(header_tbl)
     elems += [
-        Spacer(1, 6),
+        Spacer(1, 8),   # jarak kop -> garis hijau (opsi B: 8–10 pt)
         Table(
             [[""]],
             colWidths=[555],
             style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         ),
-        Spacer(1, 10),
+        Spacer(1, 20),  # jarak garis hijau -> judul (opsi B: 20–22 pt)
     ]
 
     elems.append(Paragraph("HASIL SKRINING SALURAN CERNA", styles["H1C"]))
@@ -729,7 +729,7 @@ def build_pdf_letterhead(
     elems.append(
         Paragraph("<b>2) Kebutuhan Endoskopi Saluran Cerna Atas (EGD)</b>", styles["Bold"])
     )
-    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]));
+    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
     elems.append(Paragraph(a_egd, styles["Label"]))
     if r_egd:
         elems.append(Spacer(1, 2))
@@ -851,7 +851,7 @@ def build_pdf_apcs(
     )
 
     elems.append(header_tbl)
-    elems.append(Spacer(1, 8))
+    elems.append(Spacer(1, 8))  # jarak kop -> garis
 
     elems.append(
         Table(
@@ -860,7 +860,7 @@ def build_pdf_apcs(
             style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         )
     )
-    elems.append(Spacer(1, 10))
+    elems.append(Spacer(1, 20))  # jarak garis hijau -> judul (opsi B)
 
     elems.append(
         Paragraph("HASIL SKRINING RISIKO KANKER KOLOREKTAL", styles["Judul"])
