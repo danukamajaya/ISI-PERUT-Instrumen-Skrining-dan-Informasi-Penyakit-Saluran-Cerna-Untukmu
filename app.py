@@ -83,7 +83,7 @@ CUSTOM_CSS = """
 }
 
 .header-logo img {
-  max-width: 700px;   /* boleh disesuaikan 600–750 */
+  max-width: 700px;
   width: 100%;
   height: auto;
 }
@@ -554,7 +554,7 @@ v_colo_pdf, b_colo_pdf, a_colo_pdf = verdict(
     "kolonoskopi (saluran cerna bawah)",
 )
 
-# Verdikt yang ditampilkan di layar (TIDAK dimodifikasi oleh APCS, khusus fokus perlu kolonoskopi atau tidak)
+# Verdikt yang ditampilkan di layar (TIDAK dimodifikasi oleh APCS)
 v_colo, b_colo, a_colo = v_colo_pdf, b_colo_pdf, a_colo_pdf
 
 st.subheader("📋 Ringkasan Hasil Skrining Endoskopi")
@@ -608,7 +608,12 @@ def build_pdf_letterhead(
     """
     buf = BytesIO()
     doc = SimpleDocTemplate(
-        buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28
+        buf,
+        pagesize=A4,
+        leftMargin=40,   # sedikit lebih lebar
+        rightMargin=40,
+        topMargin=30,
+        bottomMargin=28,
     )
 
     styles = getSampleStyleSheet()
@@ -642,12 +647,12 @@ def build_pdf_letterhead(
     elems = []
 
     left_img = (
-        Image(logo_rs_path, width=140, height=60)
+        Image(logo_rs_path, width=130, height=55)
         if logo_rs_path and Path(logo_rs_path).exists()
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=160, height=160)
+        Image(logo_isi_path, width=145, height=145)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
@@ -662,9 +667,10 @@ def build_pdf_letterhead(
         styles["Normal"],
     )
 
+    # Lebar konten 555 pt, dengan kolom kiri & kanan agak lebih ke dalam
     header_tbl = Table(
         [[left_img, kop_text, right_img]],
-        colWidths=[135, 300, 130],
+        colWidths=[150, 255, 150],
         hAlign="CENTER",
     )
     header_tbl.setStyle(
@@ -672,8 +678,12 @@ def build_pdf_letterhead(
             [
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("ALIGN", (1, 0), (1, 0), "CENTER"),
-                ("LEFTPADDING", (0, 0), (0, 0), 0),
-                ("RIGHTPADDING", (2, 0), (2, 0), 36),
+                # Logo kiri agak masuk ke dalam
+                ("LEFTPADDING", (0, 0), (0, 0), 14),
+                ("RIGHTPADDING", (0, 0), (0, 0), 0),
+                # Logo kanan agak masuk ke dalam
+                ("LEFTPADDING", (2, 0), (2, 0), 0),
+                ("RIGHTPADDING", (2, 0), (2, 0), 20),
             ]
         )
     )
@@ -689,9 +699,7 @@ def build_pdf_letterhead(
         Spacer(1, 10),
     ]
 
-    elems.append(
-        Paragraph("HASIL SKRINING SALURAN CERNA", styles["H1C"])
-    )
+    elems.append(Paragraph("HASIL SKRINING SALURAN CERNA", styles["H1C"]))
     elems.append(Paragraph("(GERD, kebutuhan EGD, dan kolonoskopi)", styles["SmallGray"]))
     elems.append(Spacer(1, 6))
 
@@ -721,7 +729,7 @@ def build_pdf_letterhead(
     elems.append(
         Paragraph("<b>2) Kebutuhan Endoskopi Saluran Cerna Atas (EGD)</b>", styles["Bold"])
     )
-    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]))
+    elems.append(Paragraph(f"<b>Kesimpulan:</b> {v_egd}", styles["Label"]));
     elems.append(Paragraph(a_egd, styles["Label"]))
     if r_egd:
         elems.append(Spacer(1, 2))
@@ -772,7 +780,12 @@ def build_pdf_apcs(
     """Bangun PDF hasil skrining risiko kanker kolorektal (APCS)."""
     buf = BytesIO()
     doc = SimpleDocTemplate(
-        buf, pagesize=A4, leftMargin=32, rightMargin=32, topMargin=30, bottomMargin=28
+        buf,
+        pagesize=A4,
+        leftMargin=40,
+        rightMargin=40,
+        topMargin=30,
+        bottomMargin=28,
     )
 
     styles = getSampleStyleSheet()
@@ -800,12 +813,12 @@ def build_pdf_apcs(
     elems = []
 
     left_img = (
-        Image(logo_rs_path, width=140, height=60)
+        Image(logo_rs_path, width=130, height=55)
         if logo_rs_path and Path(logo_rs_path).exists()
         else ""
     )
     right_img = (
-        Image(logo_isi_path, width=150, height=150)
+        Image(logo_isi_path, width=145, height=145)
         if logo_isi_path and Path(logo_isi_path).exists()
         else ""
     )
@@ -821,7 +834,7 @@ def build_pdf_apcs(
 
     header_tbl = Table(
         [[left_img, kop_text, right_img]],
-        colWidths=[135, 300, 120],
+        colWidths=[150, 255, 150],
         hAlign="CENTER",
     )
     header_tbl.setStyle(
@@ -829,8 +842,10 @@ def build_pdf_apcs(
             [
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("ALIGN", (1, 0), (1, 0), "CENTER"),
-                ("LEFTPADDING", (0, 0), (0, 0), 0),
-                ("RIGHTPADDING", (2, 0), (2, 0), 36),
+                ("LEFTPADDING", (0, 0), (0, 0), 14),
+                ("RIGHTPADDING", (0, 0), (0, 0), 0),
+                ("LEFTPADDING", (2, 0), (2, 0), 0),
+                ("RIGHTPADDING", (2, 0), (2, 0), 20),
             ]
         )
     )
@@ -840,7 +855,7 @@ def build_pdf_apcs(
 
     elems.append(
         Table(
-            [[""]],
+            [[""]],  # garis horizontal
             colWidths=[555],
             style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         )
