@@ -54,6 +54,9 @@ EBOOK_URL = "https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/f0KVVnM6S
 # Link booklet paket harga endoskopi
 PRICE_BOOK_URL = "https://read.bookcreator.com/RNDNIaOmuObU91dWx81iBOosFZP2/Q2RhvGlQSwmp7SePS9FLJw"
 
+# Link masukan & saran
+FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdL35FjvLNcPu2W6UgtbGZ4-A8Q1lmAiODtVUBngLSMeEwYSg/viewform?usp=dialog"
+
 # ------------------ CSS ------------------
 CUSTOM_CSS = """
 <style>
@@ -690,13 +693,13 @@ def build_pdf_letterhead(
 
     elems.append(header_tbl)
     elems += [
-        Spacer(1, 2),   # jarak kop -> garis hijau (opsi B: 8–10 pt)
+        Spacer(1, 8),   # jarak kop -> garis hijau
         Table(
             [[""]],
             colWidths=[555],
             style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         ),
-        Spacer(1, 24),  # jarak garis hijau -> judul (opsi B: 20–22 pt)
+        Spacer(1, 20),  # jarak garis hijau -> judul
     ]
 
     elems.append(Paragraph("HASIL SKRINING SALURAN CERNA", styles["H1C"]))
@@ -851,7 +854,7 @@ def build_pdf_apcs(
     )
 
     elems.append(header_tbl)
-    elems.append(Spacer(1, 2))  # jarak kop -> garis
+    elems.append(Spacer(1, 8))  # jarak kop -> garis
 
     elems.append(
         Table(
@@ -860,7 +863,7 @@ def build_pdf_apcs(
             style=[("LINEBELOW", (0, 0), (0, 0), 2, colors.HexColor("#2fa3a0"))],
         )
     )
-    elems.append(Spacer(1, 24))  # jarak garis hijau -> judul (opsi B)
+    elems.append(Spacer(1, 20))  # jarak garis hijau -> judul
 
     elems.append(
         Paragraph("HASIL SKRINING RISIKO KANKER KOLOREKTAL", styles["Judul"])
@@ -956,6 +959,21 @@ else:
         "`streamlit>=1.37` dan `reportlab>=3.6.12`, lalu deploy ulang.",
         icon="ℹ️",
     )
+
+# ------------------ KARTU MASUKAN & SARAN ------------------
+st.markdown(
+    f"""
+    <div class='ebook-card'>
+      <div class='ebook-title'>Masukan &amp; Saran untuk Aplikasi ISI PERUT</div>
+      <div style='margin-bottom:0.4rem;'>
+        Jika Anda memiliki masukan atau saran, silakan isi formulir berikut agar kami dapat
+        meningkatkan kualitas layanan dan materi edukasi.
+      </div>
+      <a href="{FEEDBACK_URL}" target="_blank" class="ebook-btn">📝 Isi formulir masukan &amp; saran</a>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ------------------ FOOTER ------------------
 st.markdown("---")
