@@ -690,7 +690,7 @@ def build_pdf_letterhead(
 
     elems.append(header_tbl)
     elems += [
-        Spacer(1, 4),   # jarak kop -> garis hijau (opsi B: 8–10 pt)
+        Spacer(1, 2),   # jarak kop -> garis hijau (opsi B: 8–10 pt)
         Table(
             [[""]],
             colWidths=[555],
@@ -851,7 +851,7 @@ def build_pdf_apcs(
     )
 
     elems.append(header_tbl)
-    elems.append(Spacer(1, 4))  # jarak kop -> garis
+    elems.append(Spacer(1, 2))  # jarak kop -> garis
 
     elems.append(
         Table(
